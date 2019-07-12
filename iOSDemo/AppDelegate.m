@@ -24,6 +24,12 @@
     [self.window makeKeyAndVisible];
     BaseNavigationController *navi = [[BaseNavigationController alloc]initWithRootViewController:[ViewController new]];
     self.window.rootViewController = navi;
+    NSUserDefaults *userDefault = [[NSUserDefaults alloc]initWithSuiteName:kGroupId];
+    //初始化会议状态
+    [userDefault setObject:@"outmeeting" forKey:kScreenRecordMeetingState];
+    //初始化屏幕录制状态
+    [userDefault setObject:@"applaunch" forKey:kScreenRecordState];
+
     return YES;
 }
 
@@ -52,6 +58,10 @@
 
 - (void)applicationWillTerminate:(UIApplication *)application {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+    //APP杀进程时,记录此时会议状态 和 屏幕录制状态
+    NSUserDefaults *userDefault = [[NSUserDefaults alloc]initWithSuiteName:kGroupId];
+    [userDefault setObject:@"outmeeting" forKey:kScreenRecordMeetingState];
+    [userDefault setObject:@"appfinsh" forKey:kScreenRecordState];
 }
 
 

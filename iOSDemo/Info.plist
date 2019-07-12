@@ -28,9 +28,11 @@
 		<true/>
 	</dict>
 	<key>NSCameraUsageDescription</key>
-	<string>iOSDemo想访问你的相册</string>
+	<string>iOSDemo想访问你的相机</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>iOSDemo想访问你的麦克风</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>iOSDemo想访问你的相册</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
