@@ -30,8 +30,22 @@
             <subviews>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xKk-la-mJV">
                     <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
+                    <subviews>
+                        <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="icon_loding1" translatesAutoresizingMaskIntoConstraints="NO" id="d4w-TH-KTZ">
+                            <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
+                        </imageView>
+                    </subviews>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="bottom" secondItem="d4w-TH-KTZ" secondAttribute="bottom" id="CNc-AS-CdG"/>
+                        <constraint firstItem="d4w-TH-KTZ" firstAttribute="leading" secondItem="xKk-la-mJV" secondAttribute="leading" id="Tjo-RB-glC"/>
+                        <constraint firstItem="d4w-TH-KTZ" firstAttribute="top" secondItem="xKk-la-mJV" secondAttribute="top" id="cqK-0j-7TY"/>
+                        <constraint firstAttribute="trailing" secondItem="d4w-TH-KTZ" secondAttribute="trailing" id="eaR-lL-AHR"/>
+                    </constraints>
                 </view>
+                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="record_screen" translatesAutoresizingMaskIntoConstraints="NO" id="tlQ-fr-k3K">
+                    <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
+                </imageView>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aIe-XE-n8b">
                     <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -156,9 +170,6 @@
                         <outlet property="delegate" destination="-1" id="XGB-XV-dN1"/>
                     </connections>
                 </tableView>
-                <imageView hidden="YES" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="record_screen" translatesAutoresizingMaskIntoConstraints="NO" id="tlQ-fr-k3K">
-                    <rect key="frame" x="0.0" y="0.0" width="736" height="414"/>
-                </imageView>
             </subviews>
             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
@@ -198,6 +209,7 @@
         <image name="Icon -off-6" width="30" height="30"/>
         <image name="Icon -off-7" width="30" height="30"/>
         <image name="Icon -off-8" width="30" height="30"/>
+        <image name="icon_loding1" width="640" height="360"/>
         <image name="icon_sigen1" width="20" height="20"/>
         <image name="record_screen" width="1334" height="750"/>
     </resources>

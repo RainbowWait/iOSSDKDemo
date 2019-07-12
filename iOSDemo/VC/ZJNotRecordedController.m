@@ -46,11 +46,11 @@
   if (!_alertView) {
     _alertView = [[UIView alloc]initWithFrame:CGRectMake(0, 0,SCREEN_WIDTH, SCREEN_HEIGHT)];
     _alertView.backgroundColor = [UIColor whiteColor];
-    NSAttributedString *text1 = [self jointAttributedStringWithItems:@[[self normorContent:NSLocalizedString(@"ZJShareWithTypeSR1A", nil)],[self importContent:NSLocalizedString(@"ZJShareWithTypeSR1B", nil)]]];
-    NSAttributedString *text2 = [self jointAttributedStringWithItems:@[[self normorContent:NSLocalizedString(@"ZJShareWithTypeSR2A", nil)],[self importContent:NSLocalizedString(@"ZJShareWithTypeSR2B", nil)]]];
-    NSAttributedString *text3 = [self jointAttributedStringWithItems:@[[self normorContent:NSLocalizedString(@"ZJShareWithTypeSR3A", nil)],[self importContent:NSLocalizedString(@"ZJShareWithTypeSR3B", nil)]]];
-    NSAttributedString *text4 = [self jointAttributedStringWithItems:@[[self normorContent:NSLocalizedString(@"ZJShareWithTypeSR4A", nil)],[self imageContent:[UIImage imageNamed:@"icon_screen_add"]],[self normorContent:NSLocalizedString(@"ZJShareWithTypeSR4B", nil)],[self importContent:NSLocalizedString(@"ZJShareWithTypeSR4C", nil)]]];
-    [_alertView addSubview:[self addShowTextView:NSLocalizedString(@"ZJShareWithTypeSRA", nil) andText1:text1 andText2:text2 andText3:text3 andText4:text4 showNext:YES]];
+    NSAttributedString *text1 = [self jointAttributedStringWithItems:@[[self normorContent:@"1.打开"],[self importContent:@"设置"]]];
+    NSAttributedString *text2 = [self jointAttributedStringWithItems:@[[self normorContent:@"2.选择"],[self importContent:@"控制中心"]]];
+    NSAttributedString *text3 = [self jointAttributedStringWithItems:@[[self normorContent:@"3.选择"],[self importContent:@"自定控制"]]];
+    NSAttributedString *text4 = [self jointAttributedStringWithItems:@[[self normorContent:@"4.点击"],[self imageContent:[UIImage imageNamed:@"icon_screen_add"]],[self normorContent:@"  添加"],[self importContent:@"屏幕录制"]]];
+    [_alertView addSubview:[self addShowTextView:@"系统设置" andText1:text1 andText2:text2 andText3:text3 andText4:text4 showNext:YES]];
       
       
     NSString *loc = [[NSBundle mainBundle] pathForResource:self.videoUri[0] ofType:@"mov"];
@@ -65,11 +65,15 @@
 
     [_alertView.layer addSublayer:self.alertplayerLayer];
     [self.alertPlayer play];
-    self.timerAlert = [NSTimer timerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
-        if (CMTimeGetSeconds(self.alertPlayer.currentTime) ==  CMTimeGetSeconds(self.alertitem.duration)) {
-            [self playbackFinished];
-        }
-    }];
+      if (@available(iOS 10.0, *)) {
+          self.timerAlert = [NSTimer timerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+              if (CMTimeGetSeconds(self.alertPlayer.currentTime) ==  CMTimeGetSeconds(self.alertitem.duration)) {
+                  [self playbackFinished];
+              }
+          }];
+      } else {
+          // Fallback on earlier versions
+      }
     [[NSRunLoop currentRunLoop] addTimer:self.timerAlert forMode:NSRunLoopCommonModes];
   }
 
@@ -108,12 +112,12 @@
     NSString *app_Name = [infoDictionary objectForKey:@"CFBundleDisplayName"];
 
     _showView.backgroundColor = [UIColor whiteColor];
-    NSAttributedString *text1 = [self jointAttributedStringWithItems:@[[self normorContent:NSLocalizedString(@"ZJShareWithTypeSR5", nil)]]];
-    NSAttributedString *text2 = [self jointAttributedStringWithItems:@[[self normorContent:NSLocalizedString(@"ZJShareWithTypeSR6", nil)],[self imageContent:[UIImage imageNamed:@"icon_screen_anniu"]]]];
-    NSAttributedString *text3 = [self jointAttributedStringWithItems:@[[self normorContent:[NSString stringWithFormat:@"%@%@%@", NSLocalizedString(@"ZJShareWithTypeSR7", nil),app_Name,NSLocalizedString(@"zjxuzhong", nil)]]]];
-    NSAttributedString *text4 = [self jointAttributedStringWithItems:@[[self normorContent:NSLocalizedString(@"ZJShareWithTypeSR8", nil)]]];
+    NSAttributedString *text1 = [self jointAttributedStringWithItems:@[[self normorContent:@"1.从屏幕底部上滑打开控制中心"]]];
+    NSAttributedString *text2 = [self jointAttributedStringWithItems:@[[self normorContent:@"2.用力按压录制按钮"],[self imageContent:[UIImage imageNamed:@"icon_screen_anniu"]]]];
+    NSAttributedString *text3 = [self jointAttributedStringWithItems:@[[self normorContent:[NSString stringWithFormat:@"%@%@%@", @"3.在列表找到",app_Name,NSLocalizedString(@"zjxuzhong", nil)]]]];
+    NSAttributedString *text4 = [self jointAttributedStringWithItems:@[[self normorContent:@"4.点击开始直播"]]];
     
-    [_showView addSubview:[self addShowTextView:NSLocalizedString(@"ZJShareWithTypeSRB", nil) andText1:text1 andText2:text2 andText3:text3 andText4:text4 showNext:NO]];
+    [_showView addSubview:[self addShowTextView:@"开始共享" andText1:text1 andText2:text2 andText3:text3 andText4:text4 showNext:NO]];
     
     NSString *loc = [[NSBundle mainBundle] pathForResource:self.videoUri[1] ofType:@"mov"];
     NSURL *url = [NSURL fileURLWithPath:loc];
@@ -130,12 +134,16 @@
 
     [_showView.layer addSublayer:self.showplayerLayer];
     [self.showPlayer play];
-    self.timerShow = [NSTimer timerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
-      if (CMTimeGetSeconds(self.showPlayer.currentTime) ==  CMTimeGetSeconds(self.showitem.duration)) {
-          [self playShowFinished];
+      if (@available(iOS 10.0, *)) {
+          self.timerShow = [NSTimer timerWithTimeInterval:1 repeats:YES block:^(NSTimer * _Nonnull timer) {
+              if (CMTimeGetSeconds(self.showPlayer.currentTime) ==  CMTimeGetSeconds(self.showitem.duration)) {
+                  [self playShowFinished];
+              }
+          }];
+      } else {
+          // Fallback on earlier versions
       }
-    }];
-    if (@available(iOS 11.0, *)) {
+    if (@available(iOS 10.0, *)) {
         [[NSRunLoop currentRunLoop] addTimer:self.timerShow forMode:NSRunLoopCommonModes];
     }
   }
@@ -166,8 +174,7 @@
     CGFloat y = 100;
     
     UIView *view = [[UIView alloc]initWithFrame:CGRectMake(20, 20, screenWidth, screenHeight)];
-    view.ott_centerY = SCREEN_HEIGHT / 2.0 ;
-    
+    view.center = CGPointMake(view.center.x, SCREEN_HEIGHT / 2.0);
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     btn.frame = CGRectMake(0, 10, 40, 40);
     [btn setImage:[[UIImage imageNamed:@"icon_screen_close"]imageWithRenderingMode:UIImageRenderingModeAlwaysOriginal] forState:UIControlStateNormal];

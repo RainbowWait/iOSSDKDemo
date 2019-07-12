@@ -13,7 +13,10 @@
 #import "ZJConferenceHeaderView.h"
 #import "VCPresentionView.h"
 #import "ShareModel.h"
-@interface ExampleVC ()<VCRtcModuleDelegate,TZImagePickerControllerDelegate,VCPresentionViewDelegate>
+#import "ZJNotRecordedController.h"
+#import "DocumentPickerViewController.h"
+#import "PDFHandle.h"
+@interface ExampleVC ()<VCRtcModuleDelegate,TZImagePickerControllerDelegate,VCPresentionViewDelegate, UIDocumentPickerDelegate>
 @property (nonatomic, strong) VCRtcModule *vcrtc;
 /** 远端视图 */
 @property (weak, nonatomic) IBOutlet UIView *othersView;
@@ -98,10 +101,11 @@
     //初始化
     self.vcrtc = [VCRtcModule sharedInstance];
     //配置服务器域名
-    self.vcrtc.apiServer = @"bss.lalonline.cn";
+    self.vcrtc.apiServer = self.serverString;
     //遵循 VCRtcModuleDelegate方法
     self.vcrtc.delegate = self;
     self.vcrtc.groupId = @"group.com.zijingcloud.phone";
+    [self.vcrtc configMultistream:NO];
     //入会类型配置 点对点
     [self.vcrtc configConnectType:VCConnectTypeUser];
     //入会音视频质量配置
@@ -111,7 +115,7 @@
     //用户账号配置(用户登录需配置,未登录不需要)
     //    [self.vcrtc configLoginAccount:@"test_ios_demo@zijingcloud.com"];
     //配置音视频 channel: 用户地址 password: 参会密码 name: 会中显示名称 xiaobeioldone@zijingcloud.com
-    [self.vcrtc connectChannel:@"1866" password:@"123456" name:@"test_ios_demo" success:^(id _Nonnull response) {
+    [self.vcrtc connectChannel:self.meetingNumString password:self.passwordString name:@"test_ios_demo" success:^(id _Nonnull response) {
         //记录此时会议状态
         NSUserDefaults *userDefault = [[NSUserDefaults alloc]initWithSuiteName:kGroupId];
         [userDefault setObject:@"inmeeting" forKey:kScreenRecordMeetingState];
@@ -130,7 +134,7 @@
     self.bottomView.backgroundColor = [[UIColor colorWithRed:18/255.0 green:26/255.0 blue:44/255.0 alpha:1.0] colorWithAlphaComponent:0.9];
     self.table.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.8];
     [self.table registerClass:[ZJConferenceVCCell class] forCellReuseIdentifier:@"ZJConferenceVCCell"];
-    self.nameLab.text = @"1867";
+    self.nameLab.text = self.meetingNumString;
 }
 
 
@@ -142,6 +146,16 @@
         _recordTimer = [NSTimer timerWithTimeInterval:1.0 target:self selector:@selector(monitoringScreenRecordStopState) userInfo:nil repeats:YES];
     }
     return _recordTimer ;
+}
+
+- (void)monitoringScreenRecordStopState {
+    NSUserDefaults *userDefault = [[NSUserDefaults alloc]initWithSuiteName:self.vcrtc.groupId];
+    //屏幕共享结束 调用stopRecordScreen表示告诉服务器,自己本端屏幕共享结束了
+    if ([[userDefault objectForKey:kScreenRecordState] isEqualToString:@"stop"] ||
+        [[userDefault objectForKey:kScreenRecordState] isEqualToString:@"appfinsh"]) {
+        [userDefault setObject:@"applaunch" forKey:kScreenRecordState];
+        [self.vcrtc stopRecordScreen];
+    }
 }
 
 
@@ -183,9 +197,12 @@
 //有参会者离开会议
 - (void)VCRtc:(VCRtcModule *)module didRemoveView:(VCVideoView *)view uuid:(NSString *)uuid {
     //从视图上移除
-    for (SmallView *smallView in self.othersView.subviews) {
-        if ([smallView.uuid isEqualToString:uuid]) {
-            [smallView removeFromSuperview];
+    for (UIView *view in self.othersView.subviews) {
+        if ([view isKindOfClass:[SmallView class]]) {
+            SmallView *smallView = (SmallView *)view;
+            if ([smallView.uuid isEqualToString:uuid]) {
+                [smallView removeFromSuperview];
+            }
         }
     }
     //从数组上移除
@@ -267,7 +284,7 @@
 
 
 /**
- 这个方法无论是本端分享或屏幕共享还是远端分享或屏幕共享,该方法都会调用
+ 这个方法无论是本端或远端图片分享或屏幕共享都会调用
  */
 - (void)VCRtc:(VCRtcModule *)module didUpdateImage:(NSString *)imageStr uuid:(NSString *)uuid {
     NSUserDefaults *userDefaults = [[NSUserDefaults alloc]initWithSuiteName:self.vcrtc.groupId ];
@@ -299,32 +316,34 @@
 }
 
 
-- (void)monitoringScreenRecordStopState {
-                NSUserDefaults *userDefault = [[NSUserDefaults alloc]initWithSuiteName:self.vcrtc.groupId];
-    if ([[userDefault objectForKey:@"screen_record_open_state"] isEqualToString:@"stop"] ||
-        [[userDefault objectForKey:kScreenRecordState] isEqualToString:@"appfinsh"]) {
-        [userDefault setObject:@"applaunch" forKey:kScreenRecordState];
-        NSLog(@"定时器 检测到stop... +++++++++++++++++++++++++++++++++++++++++");
-        [self.vcrtc stopRecordScreen];
-    }
-}
-
+/**
+ 远端屏幕共享或图片分享结束才调用 本端不调用
+ */
 - (void)VCRtc:(VCRtcModule *)module didStopImage:(NSString *)imageStr {
     NSUserDefaults *userDefaults = [[NSUserDefaults alloc]initWithSuiteName:self.vcrtc.groupId ];
+    //本端屏幕共享结束
     if ([self.shareModel.shareType isEqualToString:@"localScreenShare"] && self.shareModel.isSharing && self.shareBtn.selected) {
         if ([[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"stop"] || [[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"applaunch"]) {
+            //更新状态 屏幕共享结束
             [userDefaults setObject:kScreenRecordState forKey:@"stop"];
+            //分享按钮非选中状态
             self.shareBtn.selected = NO;
+            //屏幕共享状态视图隐藏
             self.screenRecordStateImg.hidden = YES;
+            //分享model数据为空
             self.shareModel = nil;
-             [self layoutFarEndView:self.vcrtc.layoutParticipants] ;
+            //更新屏幕显示的视频
+            [self layoutFarEndView:self.vcrtc.layoutParticipants] ;
         }
     } else {
+        //远端图片分享结束
         if (![self.shareModel.shareType isEqualToString:@"local"]) {
+            //移除屏幕显示的分享的内容视图
             [self.shareView removeFromSuperview];
             self.shareView = nil;
             self.shareImages = nil;
             self.shareModel = nil;
+            //更新屏幕显示的视频
             [self layoutFarEndView:self.vcrtc.layoutParticipants] ;
         }
     }
@@ -384,8 +403,10 @@
 }
 
 - (void)clearAllView {
-    for (SmallView *view in self.othersView.subviews) {
-        [view removeFromSuperview];
+    for (UIView *view in self.othersView.subviews) {
+        if ([view isKindOfClass:[SmallView class]]) {
+            [view removeFromSuperview];
+        }
     }
 }
 
@@ -446,27 +467,44 @@
 //分享
 - (IBAction)shareAction:(id)sender {
     if (self.shareBtn.selected) {
-        if (self.isShiTong) {
-            //终止图片分享
-            [self.vcrtc shareToStreamImageData:[NSData data]
-                                          open:NO
-                                        change:NO
-                                       success:^(id  _Nonnull response) {}
-                                       failure:^(NSError * _Nonnull error) {}];
-        } else {
-            //终止图片分享
-            [self.vcrtc shareImageData:[NSData data]
-                                  open:NO
-                                change:NO
-                               success:^(id  _Nonnull response) {}
-                               failure:^(NSError * _Nonnull error) {}];
-            
+        //如果本端是图片分享
+        if ([self.shareModel.shareType isEqualToString:@"local"]) {
+            if (self.isShiTong) {
+                //终止图片流分享
+                [self.vcrtc shareToStreamImageData:[NSData data]
+                                              open:NO
+                                            change:NO
+                                           success:^(id  _Nonnull response) {}
+                                           failure:^(NSError * _Nonnull error) {}];
+            } else {
+                //终止图片分享
+                [self.vcrtc shareImageData:[NSData data]
+                                      open:NO
+                                    change:NO
+                                   success:^(id  _Nonnull response) {}
+                                   failure:^(NSError * _Nonnull error) {}];
+                
+            }
+            [self.shareView removeFromSuperview];
+            self.shareView = nil;
+            self.shareImages = nil;
+            self.shareModel = nil;
+            self.shareBtn.selected = NO;
+        } else if ([self.shareModel.shareType isEqualToString:@"localScreenShare"]) {
+                NSUserDefaults *userDefaults = [[NSUserDefaults alloc]initWithSuiteName:self.vcrtc.groupId ];
+            [self.vcrtc stopRecordScreen];
+            //更新状态 屏幕共享结束
+            [userDefaults setObject:@"stop" forKey:kScreenRecordState];
+            //分享按钮非选中状态
+            self.shareBtn.selected = NO;
+            //屏幕共享状态视图隐藏
+            self.screenRecordStateImg.hidden = YES;
+            //分享model数据为空
+            self.shareModel = nil;
+            //更新屏幕显示的视频
+            [self layoutFarEndView:self.vcrtc.layoutParticipants] ;
         }
-        [self.shareView removeFromSuperview];
-        self.shareView = nil;
-        self.shareImages = nil;
-        self.shareModel = nil;
-        self.shareBtn.selected = NO;
+       
     } else {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"照片" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -474,10 +512,11 @@
         }];
         
         UIAlertAction *screenAction = [UIAlertAction actionWithTitle:@"屏幕" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+            [self screenRecordInfo];
             
         }];
         UIAlertAction *iCloudction = [UIAlertAction actionWithTitle:@"iCloud" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
-            
+            [self loadDocument];
         }];
         
         UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:^(UIAlertAction * _Nonnull action) {
@@ -492,18 +531,38 @@
     
 }
 
+//屏幕共享指引
+- (void)screenRecordInfo {
+    ZJNotRecordedController *notRecordC = [[ZJNotRecordedController alloc]init];
+    notRecordC.videoUri = @[@"01FirstSet",@"02StartRecord"];
+    [self presentViewController:notRecordC animated:NO completion:nil];
+}
+
+//iCloud
+- (void)loadDocument {
+    DocumentPickerViewController *documentPicker = [[DocumentPickerViewController alloc]initWithDocumentTypes:@[@"public.image",@"com.adobe.pdf"] inMode:UIDocumentPickerModeImport];
+    documentPicker.delegate = self;
+    documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
+    [self presentViewController:documentPicker animated:YES completion:nil];
+}
+
+//分享图片
 - (void)photoShareAction {
 
         TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:9 columnNumber:6 delegate:self pushPhotoPickerVc:YES];
         imagePickerVc.allowPickingOriginalPhoto = NO;
         [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
-            self.shareImages = photos;
-            self.photoType = YCPhotoSourceType_Image;
-            [self loadPresentationView];
-            [self submitSharingImage:[photos firstObject] change:NO];
+            [self shareData:photos];
         }];
         [self presentViewController:imagePickerVc animated:true completion:nil];
 
+}
+
+- (void) shareData:(NSArray *)photos {
+    self.shareImages = photos;
+    self.photoType = YCPhotoSourceType_Image;
+    [self loadPresentationView];
+    [self submitSharingImage:[photos firstObject] change:NO];
 }
 
 - (void)submitSharingImage:(UIImage *)image change:(BOOL )myChange{
@@ -562,7 +621,7 @@
         tagSingle.numberOfTouchesRequired = 1;
         [self.shareView addGestureRecognizer:tagSingle];
         self.shareView.userInteractionEnabled = YES ;
-        [self.view insertSubview:self.shareView atIndex:2];
+        [self.view insertSubview:self.shareView atIndex:3];
         [self.shareView loadShowImagesOrURLs:self.shareImages PhotoSourceType:self.photoType];
         //分享图片界面放置一个小视频 (根据自己的需求)
         [self updatePresentSmallView];
@@ -755,7 +814,25 @@
         [view loadShowImagesOrURLs:@[self.vcrtc.shareImageURL] PhotoSourceType:sourceType];
     }
 }
-
+#pragma mark - UIDocumentPickerDelegate iCloud分享文件
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentAtURL:(NSURL *)url {
+    [url startAccessingSecurityScopedResource];
+    NSFileCoordinator *coordinator = [[NSFileCoordinator alloc]init];
+    __block NSError *error ;
+    [coordinator coordinateReadingItemAtURL:url options:NSFileCoordinatorReadingResolvesSymbolicLink error:&error byAccessor:^(NSURL * _Nonnull newURL) {
+        NSString *fileType = [[[newURL lastPathComponent] componentsSeparatedByString:@"."]lastObject];
+        NSArray *arr ;
+        if ([[fileType lowercaseString] isEqualToString:@"pdf"]) {
+            arr = [PDFHandle extractJPGsFromPDFWithPath:newURL.absoluteString];
+        } else {
+            NSData *data = [NSData dataWithContentsOfURL:newURL];
+            UIImage *image = [UIImage imageWithData:data];
+            arr = @[image];
+        }
+        [self shareData:arr];
+    }];
+    [url stopAccessingSecurityScopedResource];
+}
 
 
 @end

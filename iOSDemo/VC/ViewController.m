@@ -10,6 +10,12 @@
 #import "ExampleVC.h"
 
 @interface ViewController ()
+/** 服务器地址 */
+@property (weak, nonatomic) IBOutlet UITextField *severField;
+/** 会议室号 */
+@property (weak, nonatomic) IBOutlet UITextField *meetingNumField;
+
+@property (weak, nonatomic) IBOutlet UITextField *joinPwdField;
 
 @end
 
@@ -18,9 +24,26 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view from its nib.
+    self.severField.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"serverAddress"];
+        self.meetingNumField.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"meetingNumber"];
+        self.joinPwdField.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"joinPassword"];
 }
 - (IBAction)jumpAction:(UIButton *)sender {
+    if (self.severField.text.length < 1) {
+        NSLog(@"请输入服务器地址");
+        return;
+    }
+    if (self.meetingNumField.text.length < 1) {
+        NSLog(@"请输入会议室号");
+        return;
+    }
+    [[NSUserDefaults standardUserDefaults]setObject:self.severField.text forKey:@"serverAddress"];
+    [[NSUserDefaults standardUserDefaults]setObject:self.meetingNumField.text forKey:@"meetingNumber"];
+    [[NSUserDefaults standardUserDefaults]setObject:self.joinPwdField.text forKey:@"joinPassword"];
     ExampleVC *vc = [ExampleVC new];
+    vc.serverString = self.severField.text;
+    vc.meetingNumString = self.meetingNumField.text;
+    vc.passwordString = self.joinPwdField.text;
     [self.navigationController presentViewController:vc animated:YES completion:nil];
 }
 

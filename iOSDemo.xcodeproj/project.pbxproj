@@ -82,6 +82,18 @@
 		0495179722D7064F0047FF05 /* ARDExternalSampleCapturer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0495179422D7064F0047FF05 /* ARDExternalSampleCapturer.m */; };
 		0495179822D7064F0047FF05 /* SdpTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0495179522D7064F0047FF05 /* SdpTransformer.m */; };
 		0495179922D70AC40047FF05 /* VCRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0406C06622D6DB9B002E0278 /* VCRTC.framework */; };
+		04C908C022D8308C00B4BEEC /* ZJNotRecordedController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908BE22D8308C00B4BEEC /* ZJNotRecordedController.m */; };
+		04C908C222D83CF200B4BEEC /* 01FirstSet.mov in Resources */ = {isa = PBXBuildFile; fileRef = 04C908C122D83CF200B4BEEC /* 01FirstSet.mov */; };
+		04C908C422D83D1700B4BEEC /* 02StartRecord.mov in Resources */ = {isa = PBXBuildFile; fileRef = 04C908C322D83D1600B4BEEC /* 02StartRecord.mov */; };
+		04C908C722D85DD900B4BEEC /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908C622D85DD900B4BEEC /* DocumentPickerViewController.m */; };
+		04C908CA22D85FCC00B4BEEC /* PDFHandle.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908C922D85FCC00B4BEEC /* PDFHandle.m */; };
+		04C908DD22D8608700B4BEEC /* PDFView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908CF22D8608700B4BEEC /* PDFView.m */; };
+		04C908DE22D8608700B4BEEC /* PDFToJPGManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908D022D8608700B4BEEC /* PDFToJPGManager.m */; };
+		04C908DF22D8608700B4BEEC /* NSDate+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908D222D8608700B4BEEC /* NSDate+Utilities.m */; };
+		04C908E022D8608700B4BEEC /* NSData+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908D322D8608700B4BEEC /* NSData+MD5.m */; };
+		04C908E122D8608700B4BEEC /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908D922D8608700B4BEEC /* NSString+MD5.m */; };
+		04C908E222D8608700B4BEEC /* UIImage+PDF.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908DB22D8608700B4BEEC /* UIImage+PDF.m */; };
+		04C908E322D8608700B4BEEC /* UIView+Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908DC22D8608700B4BEEC /* UIView+Image.m */; };
 		04E8CAC622D324BE00D84E26 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E8CAC522D324BE00D84E26 /* ViewController.m */; };
 		04E8CAC822D324F200D84E26 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E8CAC722D324F200D84E26 /* ViewController.xib */; };
 		04E8CACB22D327C800D84E26 /* BaseNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E8CACA22D327C800D84E26 /* BaseNavigationController.m */; };
@@ -283,6 +295,28 @@
 		0495179322D7064F0047FF05 /* SdpTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SdpTransformer.h; sourceTree = "<group>"; };
 		0495179422D7064F0047FF05 /* ARDExternalSampleCapturer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARDExternalSampleCapturer.m; sourceTree = "<group>"; };
 		0495179522D7064F0047FF05 /* SdpTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SdpTransformer.m; sourceTree = "<group>"; };
+		04C908BE22D8308C00B4BEEC /* ZJNotRecordedController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZJNotRecordedController.m; sourceTree = "<group>"; };
+		04C908BF22D8308C00B4BEEC /* ZJNotRecordedController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZJNotRecordedController.h; sourceTree = "<group>"; };
+		04C908C122D83CF200B4BEEC /* 01FirstSet.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 01FirstSet.mov; sourceTree = "<group>"; };
+		04C908C322D83D1600B4BEEC /* 02StartRecord.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 02StartRecord.mov; sourceTree = "<group>"; };
+		04C908C522D85DD900B4BEEC /* DocumentPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerViewController.h; sourceTree = "<group>"; };
+		04C908C622D85DD900B4BEEC /* DocumentPickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DocumentPickerViewController.m; sourceTree = "<group>"; };
+		04C908C822D85FCC00B4BEEC /* PDFHandle.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PDFHandle.h; sourceTree = "<group>"; };
+		04C908C922D85FCC00B4BEEC /* PDFHandle.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PDFHandle.m; sourceTree = "<group>"; };
+		04C908CF22D8608700B4BEEC /* PDFView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFView.m; sourceTree = "<group>"; };
+		04C908D022D8608700B4BEEC /* PDFToJPGManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFToJPGManager.m; sourceTree = "<group>"; };
+		04C908D122D8608700B4BEEC /* UIImage+PDF.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIImage+PDF.h"; sourceTree = "<group>"; };
+		04C908D222D8608700B4BEEC /* NSDate+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSDate+Utilities.m"; sourceTree = "<group>"; };
+		04C908D322D8608700B4BEEC /* NSData+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSData+MD5.m"; sourceTree = "<group>"; };
+		04C908D422D8608700B4BEEC /* NSString+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+MD5.h"; sourceTree = "<group>"; };
+		04C908D522D8608700B4BEEC /* UIView+Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+Image.h"; sourceTree = "<group>"; };
+		04C908D622D8608700B4BEEC /* PDFToJPGManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFToJPGManager.h; sourceTree = "<group>"; };
+		04C908D722D8608700B4BEEC /* PDFView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFView.h; sourceTree = "<group>"; };
+		04C908D822D8608700B4BEEC /* NSData+MD5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSData+MD5.h"; sourceTree = "<group>"; };
+		04C908D922D8608700B4BEEC /* NSString+MD5.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+MD5.m"; sourceTree = "<group>"; };
+		04C908DA22D8608700B4BEEC /* NSDate+Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Utilities.h"; sourceTree = "<group>"; };
+		04C908DB22D8608700B4BEEC /* UIImage+PDF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+PDF.m"; sourceTree = "<group>"; };
+		04C908DC22D8608700B4BEEC /* UIView+Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Image.m"; sourceTree = "<group>"; };
 		04D8B05B22C6132B009DAADA /* ScreenShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScreenShare.entitlements; sourceTree = "<group>"; };
 		04E8CAC422D324BE00D84E26 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		04E8CAC522D324BE00D84E26 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
@@ -344,6 +378,7 @@
 		0406BFA722D58D09002E0278 /* Framework */ = {
 			isa = PBXGroup;
 			children = (
+				04C908CE22D8608700B4BEEC /* ZJPDFToJPG */,
 				0495178322D6E3CB0047FF05 /* ZJRTCScreenShare */,
 				0406BFF722D59AA3002E0278 /* SDWebImage */,
 				0406BFDD22D59A0E002E0278 /* Helper */,
@@ -512,6 +547,8 @@
 				0455AAD622C35CEC00EFF39D /* LaunchScreen.storyboard */,
 				0455AAD922C35CEC00EFF39D /* Info.plist */,
 				04E8CAD522D34A6500D84E26 /* PrefixHeader.pch */,
+				04C908C122D83CF200B4BEEC /* 01FirstSet.mov */,
+				04C908C322D83D1600B4BEEC /* 02StartRecord.mov */,
 				0455AADA22C35CEC00EFF39D /* main.m */,
 			);
 			path = iOSDemo;
@@ -578,9 +615,34 @@
 			path = ZJRTCScreenShare;
 			sourceTree = "<group>";
 		};
+		04C908CE22D8608700B4BEEC /* ZJPDFToJPG */ = {
+			isa = PBXGroup;
+			children = (
+				04C908CF22D8608700B4BEEC /* PDFView.m */,
+				04C908D022D8608700B4BEEC /* PDFToJPGManager.m */,
+				04C908D122D8608700B4BEEC /* UIImage+PDF.h */,
+				04C908D222D8608700B4BEEC /* NSDate+Utilities.m */,
+				04C908D322D8608700B4BEEC /* NSData+MD5.m */,
+				04C908D422D8608700B4BEEC /* NSString+MD5.h */,
+				04C908D522D8608700B4BEEC /* UIView+Image.h */,
+				04C908D622D8608700B4BEEC /* PDFToJPGManager.h */,
+				04C908D722D8608700B4BEEC /* PDFView.h */,
+				04C908D822D8608700B4BEEC /* NSData+MD5.h */,
+				04C908D922D8608700B4BEEC /* NSString+MD5.m */,
+				04C908DA22D8608700B4BEEC /* NSDate+Utilities.h */,
+				04C908DB22D8608700B4BEEC /* UIImage+PDF.m */,
+				04C908DC22D8608700B4BEEC /* UIView+Image.m */,
+			);
+			path = ZJPDFToJPG;
+			sourceTree = "<group>";
+		};
 		04E8CACC22D3437500D84E26 /* VC */ = {
 			isa = PBXGroup;
 			children = (
+				04C908C522D85DD900B4BEEC /* DocumentPickerViewController.h */,
+				04C908C622D85DD900B4BEEC /* DocumentPickerViewController.m */,
+				04C908BF22D8308C00B4BEEC /* ZJNotRecordedController.h */,
+				04C908BE22D8308C00B4BEEC /* ZJNotRecordedController.m */,
 				0455AACE22C35CE800EFF39D /* ExampleVC.h */,
 				0455AACF22C35CE800EFF39D /* ExampleVC.m */,
 				0455AB1322C4530100EFF39D /* ExampleVC.xib */,
@@ -620,6 +682,8 @@
 				04E8CAE022D4363900D84E26 /* VideoViewModel.m */,
 				0406C04D22D5BF8F002E0278 /* ShareModel.h */,
 				0406C04E22D5BF8F002E0278 /* ShareModel.m */,
+				04C908C822D85FCC00B4BEEC /* PDFHandle.h */,
+				04C908C922D85FCC00B4BEEC /* PDFHandle.m */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -763,8 +827,10 @@
 			files = (
 				04E8CAC822D324F200D84E26 /* ViewController.xib in Resources */,
 				0455AAD822C35CEC00EFF39D /* LaunchScreen.storyboard in Resources */,
+				04C908C422D83D1700B4BEEC /* 02StartRecord.mov in Resources */,
 				0455AAD522C35CEC00EFF39D /* Assets.xcassets in Resources */,
 				0455AB1422C4530100EFF39D /* ExampleVC.xib in Resources */,
+				04C908C222D83CF200B4BEEC /* 01FirstSet.mov in Resources */,
 				0406BFCF22D58D45002E0278 /* TZImagePickerController.bundle in Resources */,
 				0406BFD922D5996C002E0278 /* ErrorReason.plist in Resources */,
 				04E8CAD322D343E600D84E26 /* SmallView.xib in Resources */,
@@ -813,6 +879,7 @@
 				0455AADB22C35CEC00EFF39D /* main.m in Sources */,
 				0406BFD422D58D45002E0278 /* TZImagePickerController.m in Sources */,
 				0406C03D22D59AA3002E0278 /* SDWebImageTransition.m in Sources */,
+				04C908CA22D85FCC00B4BEEC /* PDFHandle.m in Sources */,
 				0406C03922D59AA3002E0278 /* NSButton+WebCache.m in Sources */,
 				0406C02F22D59AA3002E0278 /* SDWebImageFrame.m in Sources */,
 				0406BFCE22D58D45002E0278 /* TZPhotoPreviewController.m in Sources */,
@@ -824,21 +891,26 @@
 				04E8CAC622D324BE00D84E26 /* ViewController.m in Sources */,
 				0406C03C22D59AA3002E0278 /* SDWebImageDownloaderOperation.m in Sources */,
 				0406C03E22D59AA3002E0278 /* NSData+ImageContentType.m in Sources */,
+				04C908DD22D8608700B4BEEC /* PDFView.m in Sources */,
 				0406C04122D59AA3002E0278 /* SDWebImageGIFCoder.m in Sources */,
 				0406C03222D59AA3002E0278 /* SDWebImageDownloader.m in Sources */,
 				0406C04C22D5B563002E0278 /* VCCollectionViewFlowLayout.m in Sources */,
 				0406C02D22D59AA3002E0278 /* SDWebImageManager.m in Sources */,
 				0455AACD22C35CE800EFF39D /* AppDelegate.m in Sources */,
+				04C908DF22D8608700B4BEEC /* NSDate+Utilities.m in Sources */,
+				04C908E222D8608700B4BEEC /* UIImage+PDF.m in Sources */,
 				0406C04622D59AA3002E0278 /* UIButton+WebCache.m in Sources */,
 				0406C03622D59AA3002E0278 /* SDWebImageCompat.m in Sources */,
 				0406BFDC22D5998E002E0278 /* VCPresentionView.m in Sources */,
 				0406C04522D59AA3002E0278 /* SDWebImageImageIOCoder.m in Sources */,
+				04C908DE22D8608700B4BEEC /* PDFToJPGManager.m in Sources */,
 				0406BFEC22D59A0E002E0278 /* YCCycleProgressView.m in Sources */,
 				0406BFEA22D59A0E002E0278 /* YCPhotoBrowserAnimator.m in Sources */,
 				0406C03022D59AA3002E0278 /* UIImage+ForceDecode.m in Sources */,
 				0406BFD222D58D45002E0278 /* TZPhotoPickerController.m in Sources */,
 				0406C03A22D59AA3002E0278 /* SDAnimatedImageRep.m in Sources */,
 				0406C03122D59AA3002E0278 /* SDWebImageCodersManager.m in Sources */,
+				04C908C722D85DD900B4BEEC /* DocumentPickerViewController.m in Sources */,
 				0406BFCC22D58D45002E0278 /* NSBundle+TZImagePicker.m in Sources */,
 				0406BFD122D58D45002E0278 /* TZImageManager.m in Sources */,
 				0406BFD722D58D45002E0278 /* TZImageRequestOperation.m in Sources */,
@@ -848,6 +920,7 @@
 				0406C04922D5B4AF002E0278 /* UIImage+tag.m in Sources */,
 				0406BFEE22D59A0E002E0278 /* YCPhotoBrowserConst.m in Sources */,
 				0406BFED22D59A0E002E0278 /* YCPhotoBrowserCellHelper.m in Sources */,
+				04C908C022D8308C00B4BEEC /* ZJNotRecordedController.m in Sources */,
 				0406C03F22D59AA3002E0278 /* UIImageView+WebCache.m in Sources */,
 				04E8CAEF22D46D6D00D84E26 /* ZJConferenceVCCell.m in Sources */,
 				0406C03722D59AA3002E0278 /* SDWebImagePrefetcher.m in Sources */,
@@ -856,11 +929,14 @@
 				0406BFEF22D59A0E002E0278 /* YCPhotoBrowserCell.m in Sources */,
 				0406C04F22D5BF8F002E0278 /* ShareModel.m in Sources */,
 				0406BFCB22D58D45002E0278 /* TZAssetModel.m in Sources */,
+				04C908E122D8608700B4BEEC /* NSString+MD5.m in Sources */,
+				04C908E322D8608700B4BEEC /* UIView+Image.m in Sources */,
 				0406BFCD22D58D45002E0278 /* UIView+Layout.m in Sources */,
 				0406BFD622D58D45002E0278 /* TZGifPhotoPreviewController.m in Sources */,
 				0406BFC822D58D45002E0278 /* TZImageCropManager.m in Sources */,
 				04E8CAE122D4363900D84E26 /* VideoViewModel.m in Sources */,
 				0406C03B22D59AA3002E0278 /* SDImageCache.m in Sources */,
+				04C908E022D8608700B4BEEC /* NSData+MD5.m in Sources */,
 				04E8CACB22D327C800D84E26 /* BaseNavigationController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
