@@ -15,6 +15,7 @@
 @property (nonatomic, copy) NSString *meetingNumString;
 /** 参会密码 */
 @property (nonatomic, copy) NSString *passwordString;
-
+/** 是否为多流模式 多流模式清晰度较高 */
+@property (nonatomic, assign) BOOL isMultistream;
 @end
 

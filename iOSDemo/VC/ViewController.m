@@ -14,8 +14,10 @@
 @property (weak, nonatomic) IBOutlet UITextField *severField;
 /** 会议室号 */
 @property (weak, nonatomic) IBOutlet UITextField *meetingNumField;
-
+/** 参会密码 */
 @property (weak, nonatomic) IBOutlet UITextField *joinPwdField;
+//是否是多流
+@property (weak, nonatomic) IBOutlet UISwitch *multistreamSwitch;
 
 @end
 
@@ -44,6 +46,7 @@
     vc.serverString = self.severField.text;
     vc.meetingNumString = self.meetingNumField.text;
     vc.passwordString = self.joinPwdField.text;
+    vc.isMultistream = self.multistreamSwitch.on;
     [self.navigationController presentViewController:vc animated:YES completion:nil];
 }
 

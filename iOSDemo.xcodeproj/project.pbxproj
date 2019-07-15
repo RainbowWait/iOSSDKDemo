@@ -78,9 +78,6 @@
 		0455AB3222C5E93600EFF39D /* SampleHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 0455AB3122C5E93600EFF39D /* SampleHandler.m */; };
 		0455AB5422C5F72900EFF39D /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0455AB1A22C5C83800EFF39D /* ReplayKit.framework */; };
 		0455AB5922C6047C00EFF39D /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0455AB1A22C5C83800EFF39D /* ReplayKit.framework */; };
-		0495179622D7064F0047FF05 /* ScreenHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 0495179022D7064E0047FF05 /* ScreenHelper.m */; };
-		0495179722D7064F0047FF05 /* ARDExternalSampleCapturer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0495179422D7064F0047FF05 /* ARDExternalSampleCapturer.m */; };
-		0495179822D7064F0047FF05 /* SdpTransformer.m in Sources */ = {isa = PBXBuildFile; fileRef = 0495179522D7064F0047FF05 /* SdpTransformer.m */; };
 		0495179922D70AC40047FF05 /* VCRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0406C06622D6DB9B002E0278 /* VCRTC.framework */; };
 		04C908C022D8308C00B4BEEC /* ZJNotRecordedController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908BE22D8308C00B4BEEC /* ZJNotRecordedController.m */; };
 		04C908C222D83CF200B4BEEC /* 01FirstSet.mov in Resources */ = {isa = PBXBuildFile; fileRef = 04C908C122D83CF200B4BEEC /* 01FirstSet.mov */; };
@@ -94,6 +91,9 @@
 		04C908E122D8608700B4BEEC /* NSString+MD5.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908D922D8608700B4BEEC /* NSString+MD5.m */; };
 		04C908E222D8608700B4BEEC /* UIImage+PDF.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908DB22D8608700B4BEEC /* UIImage+PDF.m */; };
 		04C908E322D8608700B4BEEC /* UIView+Image.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908DC22D8608700B4BEEC /* UIView+Image.m */; };
+		04C9092022D894BA00B4BEEC /* ZJRTCScreenShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C9091F22D894BA00B4BEEC /* ZJRTCScreenShare.framework */; };
+		04C9092122D8950500B4BEEC /* ZJRTCScreenShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C9091F22D894BA00B4BEEC /* ZJRTCScreenShare.framework */; };
+		04C9092222D8950500B4BEEC /* ZJRTCScreenShare.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04C9091F22D894BA00B4BEEC /* ZJRTCScreenShare.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		04E8CAC622D324BE00D84E26 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E8CAC522D324BE00D84E26 /* ViewController.m */; };
 		04E8CAC822D324F200D84E26 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E8CAC722D324F200D84E26 /* ViewController.xib */; };
 		04E8CACB22D327C800D84E26 /* BaseNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E8CACA22D327C800D84E26 /* BaseNavigationController.m */; };
@@ -138,6 +138,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				04C9092222D8950500B4BEEC /* ZJRTCScreenShare.framework in Embed Frameworks */,
 				0406C06A22D6DBC0002E0278 /* VCRTC.framework in Embed Frameworks */,
 				0406BFF422D59A7C002E0278 /* WebRTC.framework in Embed Frameworks */,
 			);
@@ -289,12 +290,6 @@
 		0455AB3322C5E93600EFF39D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0455AB3A22C5E93600EFF39D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0455AB5A22C6118700EFF39D /* iOSDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOSDemo.entitlements; sourceTree = "<group>"; };
-		0495179022D7064E0047FF05 /* ScreenHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScreenHelper.m; sourceTree = "<group>"; };
-		0495179122D7064E0047FF05 /* ScreenHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScreenHelper.h; sourceTree = "<group>"; };
-		0495179222D7064E0047FF05 /* ARDExternalSampleCapturer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ARDExternalSampleCapturer.h; sourceTree = "<group>"; };
-		0495179322D7064F0047FF05 /* SdpTransformer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SdpTransformer.h; sourceTree = "<group>"; };
-		0495179422D7064F0047FF05 /* ARDExternalSampleCapturer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ARDExternalSampleCapturer.m; sourceTree = "<group>"; };
-		0495179522D7064F0047FF05 /* SdpTransformer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SdpTransformer.m; sourceTree = "<group>"; };
 		04C908BE22D8308C00B4BEEC /* ZJNotRecordedController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZJNotRecordedController.m; sourceTree = "<group>"; };
 		04C908BF22D8308C00B4BEEC /* ZJNotRecordedController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZJNotRecordedController.h; sourceTree = "<group>"; };
 		04C908C122D83CF200B4BEEC /* 01FirstSet.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 01FirstSet.mov; sourceTree = "<group>"; };
@@ -317,6 +312,7 @@
 		04C908DA22D8608700B4BEEC /* NSDate+Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSDate+Utilities.h"; sourceTree = "<group>"; };
 		04C908DB22D8608700B4BEEC /* UIImage+PDF.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIImage+PDF.m"; sourceTree = "<group>"; };
 		04C908DC22D8608700B4BEEC /* UIView+Image.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+Image.m"; sourceTree = "<group>"; };
+		04C9091F22D894BA00B4BEEC /* ZJRTCScreenShare.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ZJRTCScreenShare.framework; path = "../../../../../../Library/Developer/Xcode/DerivedData/ZJRTC-With-Demo-anrkivrbttxnpbbmcnorsgxujnfj/Build/Products/Release-iphoneos/ZJRTCScreenShare.framework"; sourceTree = "<group>"; };
 		04D8B05B22C6132B009DAADA /* ScreenShare.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = ScreenShare.entitlements; sourceTree = "<group>"; };
 		04E8CAC422D324BE00D84E26 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		04E8CAC522D324BE00D84E26 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
@@ -344,6 +340,7 @@
 			files = (
 				0455AB5422C5F72900EFF39D /* ReplayKit.framework in Frameworks */,
 				0406C06922D6DBC0002E0278 /* VCRTC.framework in Frameworks */,
+				04C9092122D8950500B4BEEC /* ZJRTCScreenShare.framework in Frameworks */,
 				0406C06722D6DB9B002E0278 /* VCRTC.framework in Frameworks */,
 				0406BFF322D59A7C002E0278 /* WebRTC.framework in Frameworks */,
 			);
@@ -367,6 +364,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04C9092022D894BA00B4BEEC /* ZJRTCScreenShare.framework in Frameworks */,
 				0455AB5922C6047C00EFF39D /* ReplayKit.framework in Frameworks */,
 				0495179922D70AC40047FF05 /* VCRTC.framework in Frameworks */,
 			);
@@ -379,7 +377,6 @@
 			isa = PBXGroup;
 			children = (
 				04C908CE22D8608700B4BEEC /* ZJPDFToJPG */,
-				0495178322D6E3CB0047FF05 /* ZJRTCScreenShare */,
 				0406BFF722D59AA3002E0278 /* SDWebImage */,
 				0406BFDD22D59A0E002E0278 /* Helper */,
 				0455AAFD22C35D0400EFF39D /* vc-video-sdk */,
@@ -575,6 +572,7 @@
 		0455AAFD22C35D0400EFF39D /* vc-video-sdk */ = {
 			isa = PBXGroup;
 			children = (
+				04C9091F22D894BA00B4BEEC /* ZJRTCScreenShare.framework */,
 				0406BFD822D5996C002E0278 /* ErrorReason.plist */,
 				0406C06622D6DB9B002E0278 /* VCRTC.framework */,
 				0455AB0F22C363D100EFF39D /* WebRTC.framework */,
@@ -600,19 +598,6 @@
 				0455AB3322C5E93600EFF39D /* Info.plist */,
 			);
 			path = ScreenShare;
-			sourceTree = "<group>";
-		};
-		0495178322D6E3CB0047FF05 /* ZJRTCScreenShare */ = {
-			isa = PBXGroup;
-			children = (
-				0495179222D7064E0047FF05 /* ARDExternalSampleCapturer.h */,
-				0495179422D7064F0047FF05 /* ARDExternalSampleCapturer.m */,
-				0495179122D7064E0047FF05 /* ScreenHelper.h */,
-				0495179022D7064E0047FF05 /* ScreenHelper.m */,
-				0495179322D7064F0047FF05 /* SdpTransformer.h */,
-				0495179522D7064F0047FF05 /* SdpTransformer.m */,
-			);
-			path = ZJRTCScreenShare;
 			sourceTree = "<group>";
 		};
 		04C908CE22D8608700B4BEEC /* ZJPDFToJPG */ = {
@@ -961,9 +946,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0495179722D7064F0047FF05 /* ARDExternalSampleCapturer.m in Sources */,
-				0495179622D7064F0047FF05 /* ScreenHelper.m in Sources */,
-				0495179822D7064F0047FF05 /* SdpTransformer.m in Sources */,
 				04E8CAD122D343D600D84E26 /* SmallView.m in Sources */,
 				0455AB3222C5E93600EFF39D /* SampleHandler.m in Sources */,
 			);

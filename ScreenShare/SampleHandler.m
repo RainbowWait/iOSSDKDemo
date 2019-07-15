@@ -8,7 +8,8 @@
 
 
 #import "SampleHandler.h"//
-#import "ScreenHelper.h"
+//#import "ScreenHelper.h"
+#import <ZJRTCScreenShare/ZJRTCScreenShare.h>
 #import <VCRTC/VCRTC.h>
 
 @interface SampleHandler ()
@@ -20,7 +21,6 @@
 @implementation SampleHandler
 
 - (void)broadcastStartedWithSetupInfo:(NSDictionary<NSString *,NSObject *> *)setupInfo {
-    // User has requested to start the broadcast. Setup info from the UI extension can be supplied but optional.
     self.screenHelper = [ScreenHelper sharedInstance];
     //1.配置GroupId
     self.screenHelper.groupId = kGroupId ;

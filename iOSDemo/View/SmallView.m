@@ -68,18 +68,20 @@
         [smallView addAnimationImageWithImageView:smallView.stateImg];
     }
     
-    NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc]initWithString:@""];
-    if (participant.overlayText.length == 0) {
-        participant.overlayText = @"会中显示为空";
+    if (participant.overlayText.length > 0) {
+        NSMutableAttributedString *attributedText = [[NSMutableAttributedString alloc]initWithString:@""];
+        NSAttributedString * nameString =  [[NSAttributedString alloc]initWithString:participant.overlayText];
+        [attributedText appendAttributedString:nameString];
+        [attributedText addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:13] range:NSMakeRange(0, attributedText.length)];
+        [attributedText addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedText.length)];
+        //计算会中显示名的宽度 18 是nameLab的高度
+        CGFloat width = [attributedText cuculateAttributedStringWidthWithFontSize:13 withLHeight:18].width + 10 > 100 ? 100 : [attributedText cuculateAttributedStringWidthWithFontSize:13 withLHeight:18].width + 10;
+        smallView.nameLab.attributedText = attributedText;
+        smallView.nameLabWidthConstant.constant = width;
+    } else {
+        smallView.nameLab.hidden = YES;
     }
-    NSAttributedString * nameString =  [[NSAttributedString alloc]initWithString:participant.overlayText];
-    [attributedText appendAttributedString:nameString];
-    [attributedText addAttribute:NSFontAttributeName value:[UIFont systemFontOfSize:13] range:NSMakeRange(0, attributedText.length)];
-    [attributedText addAttribute:NSForegroundColorAttributeName value:[UIColor whiteColor] range:NSMakeRange(0, attributedText.length)];
-    //计算会中显示名的宽度 18 是nameLab的高度
-    CGFloat width = [attributedText cuculateAttributedStringWidthWithFontSize:13 withLHeight:18].width + 10 > 100 ? 100 : [attributedText cuculateAttributedStringWidthWithFontSize:13 withLHeight:18].width + 10;
-    smallView.nameLab.attributedText = attributedText;
-    smallView.nameLabWidthConstant.constant = width;
+
     smallView.isBig = isBig;
     smallView.uuid = uuid;
     return smallView;

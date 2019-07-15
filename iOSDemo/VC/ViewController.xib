@@ -14,6 +14,7 @@
             <connections>
                 <outlet property="joinPwdField" destination="5BB-Zv-CKk" id="Iev-CI-EHV"/>
                 <outlet property="meetingNumField" destination="0kc-Sw-c8p" id="gHu-Hc-oIA"/>
+                <outlet property="multistreamSwitch" destination="mLA-g6-c1v" id="fJb-Jq-Mh8"/>
                 <outlet property="severField" destination="e58-r7-aHq" id="3Qx-ep-flW"/>
                 <outlet property="view" destination="iN0-l3-epB" id="fXD-d3-2Gn"/>
             </connections>
@@ -24,7 +25,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="YfX-O7-bs3">
-                    <rect key="frame" x="15" y="324" width="384" height="50"/>
+                    <rect key="frame" x="15" y="389" width="384" height="50"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="50" id="nRL-Dt-DVI"/>
                     </constraints>
@@ -144,6 +145,38 @@
                         <constraint firstAttribute="trailing" secondItem="5BB-Zv-CKk" secondAttribute="trailing" id="y0c-SX-U1I"/>
                     </constraints>
                 </view>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tvc-hb-jse">
+                    <rect key="frame" x="15" y="324" width="384" height="50"/>
+                    <subviews>
+                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="是否是多流模式" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lGx-M0-dZA">
+                            <rect key="frame" x="0.0" y="16.5" width="100" height="17"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                            <nil key="textColor"/>
+                            <nil key="highlightedColor"/>
+                        </label>
+                        <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rPN-oA-2vu">
+                            <rect key="frame" x="0.0" y="49.5" width="384" height="0.5"/>
+                            <color key="backgroundColor" red="0.70401729059999996" green="0.70401729059999996" blue="0.70401729059999996" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <constraints>
+                                <constraint firstAttribute="height" constant="0.5" id="y4f-xW-lao"/>
+                            </constraints>
+                        </view>
+                        <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mLA-g6-c1v">
+                            <rect key="frame" x="325" y="9.5" width="51" height="31"/>
+                        </switch>
+                    </subviews>
+                    <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="50" id="AqF-AB-U5H"/>
+                        <constraint firstItem="mLA-g6-c1v" firstAttribute="centerY" secondItem="Tvc-hb-jse" secondAttribute="centerY" id="F7q-Cp-eE5"/>
+                        <constraint firstItem="lGx-M0-dZA" firstAttribute="centerY" secondItem="Tvc-hb-jse" secondAttribute="centerY" id="FB7-vP-315"/>
+                        <constraint firstAttribute="trailing" secondItem="rPN-oA-2vu" secondAttribute="trailing" id="Mrl-BR-0ZZ"/>
+                        <constraint firstItem="lGx-M0-dZA" firstAttribute="leading" secondItem="Tvc-hb-jse" secondAttribute="leading" id="Ov1-OP-Vtz"/>
+                        <constraint firstAttribute="trailing" secondItem="mLA-g6-c1v" secondAttribute="trailing" constant="10" id="Sqg-xK-mK3"/>
+                        <constraint firstItem="rPN-oA-2vu" firstAttribute="leading" secondItem="Tvc-hb-jse" secondAttribute="leading" id="fRy-cN-fJP"/>
+                        <constraint firstAttribute="bottom" secondItem="rPN-oA-2vu" secondAttribute="bottom" id="zek-0m-AvB"/>
+                    </constraints>
+                </view>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
@@ -151,13 +184,16 @@
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="A8f-nD-bMd" secondAttribute="trailing" constant="15" id="7Gz-oz-rdC"/>
                 <constraint firstItem="C9c-qm-ePY" firstAttribute="top" secondItem="A8f-nD-bMd" secondAttribute="bottom" constant="10" id="8pB-1K-Xea"/>
                 <constraint firstItem="vUN-kp-3ea" firstAttribute="trailing" secondItem="YfX-O7-bs3" secondAttribute="trailing" constant="15" id="8za-HQ-NfZ"/>
-                <constraint firstItem="YfX-O7-bs3" firstAttribute="top" secondItem="e2i-Tr-tcy" secondAttribute="bottom" constant="10" id="Dzd-GU-3vF"/>
                 <constraint firstItem="YfX-O7-bs3" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="15" id="MOm-Kk-hck"/>
                 <constraint firstItem="e2i-Tr-tcy" firstAttribute="leading" secondItem="C9c-qm-ePY" secondAttribute="leading" id="NuC-p7-rr7"/>
                 <constraint firstItem="A8f-nD-bMd" firstAttribute="top" secondItem="vUN-kp-3ea" secondAttribute="top" constant="100" id="Oxr-Jl-q2J"/>
+                <constraint firstItem="Tvc-hb-jse" firstAttribute="trailing" secondItem="e2i-Tr-tcy" secondAttribute="trailing" id="avh-mn-Kku"/>
                 <constraint firstItem="C9c-qm-ePY" firstAttribute="trailing" secondItem="A8f-nD-bMd" secondAttribute="trailing" id="hUj-JH-LU7"/>
+                <constraint firstItem="Tvc-hb-jse" firstAttribute="leading" secondItem="e2i-Tr-tcy" secondAttribute="leading" id="jOO-PV-uDy"/>
                 <constraint firstItem="e2i-Tr-tcy" firstAttribute="top" secondItem="C9c-qm-ePY" secondAttribute="bottom" constant="10" id="kaE-rJ-giB"/>
                 <constraint firstItem="A8f-nD-bMd" firstAttribute="leading" secondItem="vUN-kp-3ea" secondAttribute="leading" constant="15" id="pie-0M-ygQ"/>
+                <constraint firstItem="Tvc-hb-jse" firstAttribute="top" secondItem="e2i-Tr-tcy" secondAttribute="bottom" constant="10" id="qlZ-Bb-eLB"/>
+                <constraint firstItem="YfX-O7-bs3" firstAttribute="top" secondItem="Tvc-hb-jse" secondAttribute="bottom" constant="15" id="rZF-1A-gnU"/>
                 <constraint firstItem="C9c-qm-ePY" firstAttribute="leading" secondItem="A8f-nD-bMd" secondAttribute="leading" id="zNI-iz-GSL"/>
             </constraints>
             <viewLayoutGuide key="safeArea" id="vUN-kp-3ea"/>

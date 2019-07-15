@@ -105,13 +105,12 @@
     //遵循 VCRtcModuleDelegate方法
     self.vcrtc.delegate = self;
     self.vcrtc.groupId = @"group.com.zijingcloud.phone";
-    [self.vcrtc configMultistream:NO];
     //入会类型配置 点对点
     [self.vcrtc configConnectType:VCConnectTypeUser];
     //入会音视频质量配置
     [self.vcrtc configVideoProfile:VCVideoProfile480P];
     //入会接收流的方式配置
-    [self.vcrtc configMultistream:YES];
+    [self.vcrtc configMultistream:self.isMultistream];
     //用户账号配置(用户登录需配置,未登录不需要)
     //    [self.vcrtc configLoginAccount:@"test_ios_demo@zijingcloud.com"];
     //配置音视频 channel: 用户地址 password: 参会密码 name: 会中显示名称 xiaobeioldone@zijingcloud.com
@@ -162,34 +161,41 @@
 #pragma mark - VCRtcModuleDelegate 接收会中音视频处理
 //接收本地视频
 - (void)VCRtc:(VCRtcModule *)module didAddLocalView:(VCVideoView *)view {
-    Participant *localParticipant = self.vcrtc.rosterList[self.vcrtc.uuid];
-    if (localParticipant == nil || localParticipant.uuid.length == 0) {
-        Participant *tempParticipant = [[Participant alloc] init];
-        tempParticipant.role = @"host";
-        tempParticipant.uuid = self.vcrtc.uuid ;
-        tempParticipant.overlayText = @"我";
-        localParticipant = tempParticipant;
-        
-    }
+        Participant *localParticipant = [[Participant alloc] init];
+        localParticipant.role = @"host";
+        localParticipant.uuid = self.vcrtc.uuid ;
+        localParticipant.overlayText = @"我";
     [self.farEndViewsArray addObject:[[VideoViewModel alloc] initWithuuid:self.vcrtc.uuid videoView:view participant:localParticipant]];
-    
      [self layoutFarEndView:self.vcrtc.layoutParticipants];
     
     
 }
 // 接收远端视频
 - (void)VCRtc:(VCRtcModule *)module didAddView:(VCVideoView *)view uuid:(NSString *)uuid {
-    BOOL isContain = NO;
-    //该数组是否包含该参会者的视频视图
-    for (VideoViewModel *model in self.farEndViewsArray) {
-        if ([model.uuid isEqualToString:uuid]) {
-            isContain = YES;
+    //多流的视频处理方式
+    if (self.isMultistream) {
+        BOOL isContain = NO;
+        //该数组是否包含该参会者的视频视图
+        for (VideoViewModel *model in self.farEndViewsArray) {
+            if ([model.uuid isEqualToString:uuid]) {
+                isContain = YES;
+            }
         }
-    }
-    //只处理了3个远端视频
-    if (!isContain) {
+        if (!isContain) {
+            [self.farEndViewsArray addObject:[[VideoViewModel alloc] initWithuuid:uuid videoView:view participant:self.vcrtc.rosterList[uuid]]];
+            [self layoutFarEndView:self.vcrtc.layoutParticipants];
+        }
         
-        [self.farEndViewsArray addObject:[[VideoViewModel alloc] initWithuuid:uuid videoView:view participant:self.vcrtc.rosterList[uuid]]];
+    } else {
+        //单流流处理方式
+        NSMutableArray *tempArray = [NSMutableArray array];
+            [tempArray addObject:[[VideoViewModel alloc] initWithuuid:uuid videoView:view participant:self.vcrtc.rosterList[uuid]]];
+        for (VideoViewModel *sub in self.farEndViewsArray) {
+            if ([self.vcrtc.uuid isEqualToString:sub.uuid]) {
+                [tempArray addObject:sub] ;
+            }
+        }
+        self.farEndViewsArray = tempArray;
         [self layoutFarEndView:self.vcrtc.layoutParticipants];
     }
 }
