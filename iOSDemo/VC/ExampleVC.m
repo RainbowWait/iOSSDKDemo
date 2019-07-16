@@ -413,11 +413,11 @@
                 self.shareImages = nil;
                 self.shareModel = nil;
             } else if ([self.shareModel.shareType isEqualToString:@"remote"]) {
+                //远端结束分享
                 self.shareView = nil;
                 self.shareModel = nil;
             } else if ([self.shareModel.shareType isEqualToString:@"local_remote"]) {
-//                self.shareView = nil;
-//                self.shareModel = nil;
+                // 抢远端的流 如果远端在分享 从远端抢流
             }
             //更新屏幕显示的视频
             [self layoutFarEndView:self.vcrtc.layoutParticipants];
@@ -481,6 +481,7 @@
                     if (participantsArray.count <= 1) {
                         [participantsArray addObject:self.vcrtc.uuid];
                     } else {
+                        //把自己放在小视频的第一位
                         [participantsArray insertObject:self.vcrtc.uuid atIndex:1];
                     }
                 }
