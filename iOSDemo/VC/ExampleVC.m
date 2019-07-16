@@ -9,11 +9,11 @@
 #import "ExampleVC.h"
 #import "VideoViewModel.h"
 #import "SmallView.h"
-#import "ZJConferenceVCCell.h"
-#import "ZJConferenceHeaderView.h"
+#import "ConferenceVCCell.h"
+#import "ConferenceHeaderView.h"
 #import "VCPresentionView.h"
 #import "ShareModel.h"
-#import "ZJNotRecordedController.h"
+#import "NotRecordedController.h"
 #import "DocumentPickerViewController.h"
 #import "PDFHandle.h"
 @interface ExampleVC ()<VCRtcModuleDelegate,TZImagePickerControllerDelegate,VCPresentionViewDelegate, UIDocumentPickerDelegate>
@@ -24,7 +24,6 @@
 @property (nonatomic, strong) NSMutableArray <VideoViewModel *>*farEndViewsArray;
 /** 本地视频View */
 @property (nonatomic, strong) VCVideoView *localView;
-
 /** 顶部视图 */
 @property (weak, nonatomic) IBOutlet UIView *topView;
 /** 底部视图 */
@@ -45,14 +44,17 @@
 @property (nonatomic, assign) YCPhotoSourceType photoType;
 /** 分享的图片 */
 @property (nonatomic, strong) NSArray *shareImages;
-/** 分享相关的状态记录 */
+/** 分享相关的状态记录
+ 注意: isPrivateCloud 为YES时 接收分享和屏幕共享都是流 本端图片分享和屏幕共享都是流
+ isPrivateCloud 为NO时, 接收分享和屏幕共享是图片 本端图片分享是图片形式本端屏幕共享是流
+ */
 @property (nonatomic, strong) ShareModel *shareModel;
-@property (nonatomic, assign) BOOL  isShiTong;
 /** 本地屏幕录制状态显示 */
 @property (weak, nonatomic) IBOutlet UIImageView *screenRecordStateImg;
 /** 屏幕录制由于屏幕录制关闭后, 无法及时获取该状态,所以使用定时器时刻监测该状态 */
 @property (nonatomic, strong) NSTimer *recordTimer ;
-
+/**本地自己的音视频数据模型 */
+@property (nonatomic, strong) VideoViewModel *localViewModel;
 @end
 
 @implementation ExampleVC
@@ -90,11 +92,7 @@
     [self viewPropertySet];
     self.farEndViewsArray = [NSMutableArray array];
     [self joinMeetingSet];
-    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(closeShareScreen) name:@"closeShareScreen" object:nil];
     
-}
-- (void)closeShareScreen {
-    [self.vcrtc stopRecordScreen];
 }
 //入会配置
 - (void)joinMeetingSet {
@@ -104,15 +102,16 @@
     self.vcrtc.apiServer = self.serverString;
     //遵循 VCRtcModuleDelegate方法
     self.vcrtc.delegate = self;
-    self.vcrtc.groupId = @"group.com.zijingcloud.phone";
+    self.vcrtc.groupId = kGroupId;
     //入会类型配置 点对点
     [self.vcrtc configConnectType:VCConnectTypeUser];
     //入会音视频质量配置
     [self.vcrtc configVideoProfile:VCVideoProfile480P];
     //入会接收流的方式配置
     [self.vcrtc configMultistream:self.isMultistream];
+    [self.vcrtc configPrivateCloudPlatform:YES];
     //用户账号配置(用户登录需配置,未登录不需要)
-    //    [self.vcrtc configLoginAccount:@"test_ios_demo@zijingcloud.com"];
+    // [self.vcrtc configLoginAccount:@"填写登录的账号"];
     //配置音视频 channel: 用户地址 password: 参会密码 name: 会中显示名称 xiaobeioldone@zijingcloud.com
     [self.vcrtc connectChannel:self.meetingNumString password:self.passwordString name:@"test_ios_demo" success:^(id _Nonnull response) {
         //记录此时会议状态
@@ -132,13 +131,14 @@
     self.topView.backgroundColor = [[UIColor colorWithRed:18/255.0 green:26/255.0 blue:44/255.0 alpha:1.0] colorWithAlphaComponent:0.9];
     self.bottomView.backgroundColor = [[UIColor colorWithRed:18/255.0 green:26/255.0 blue:44/255.0 alpha:1.0] colorWithAlphaComponent:0.9];
     self.table.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.8];
-    [self.table registerClass:[ZJConferenceVCCell class] forCellReuseIdentifier:@"ZJConferenceVCCell"];
+    [self.table registerClass:[ConferenceVCCell class] forCellReuseIdentifier:@"ConferenceVCCell"];
     self.nameLab.text = self.meetingNumString;
 }
 
 
 /**
  监测本端屏幕共享是否结束
+ 由于屏幕录制停止了,这儿不能及时获取
  */
 -(NSTimer *)recordTimer {
     if (!_recordTimer) {
@@ -161,12 +161,14 @@
 #pragma mark - VCRtcModuleDelegate 接收会中音视频处理
 //接收本地视频
 - (void)VCRtc:(VCRtcModule *)module didAddLocalView:(VCVideoView *)view {
-        Participant *localParticipant = [[Participant alloc] init];
-        localParticipant.role = @"host";
-        localParticipant.uuid = self.vcrtc.uuid ;
-        localParticipant.overlayText = @"我";
-    [self.farEndViewsArray addObject:[[VideoViewModel alloc] initWithuuid:self.vcrtc.uuid videoView:view participant:localParticipant]];
-     [self layoutFarEndView:self.vcrtc.layoutParticipants];
+    Participant *localParticipant = [[Participant alloc] init];
+    localParticipant.role = @"host";
+    localParticipant.uuid = self.vcrtc.uuid ;
+    localParticipant.overlayText = @"我";
+    self.localViewModel = [[VideoViewModel alloc] initWithuuid:self.vcrtc.uuid videoView:view participant:localParticipant];
+    [self.farEndViewsArray addObject:self.localViewModel];
+    [self layoutFarEndView:self.vcrtc.layoutParticipants];
+    
     
     
 }
@@ -174,55 +176,62 @@
 - (void)VCRtc:(VCRtcModule *)module didAddView:(VCVideoView *)view uuid:(NSString *)uuid {
     //多流的视频处理方式
     if (self.isMultistream) {
-        BOOL isContain = NO;
-        //该数组是否包含该参会者的视频视图
-        for (VideoViewModel *model in self.farEndViewsArray) {
-            if ([model.uuid isEqualToString:uuid]) {
-                isContain = YES;
+        if (self.isPrivateCloud) {
+            //isPrivateCloud 为YES 分享图片和共享屏幕是流的方式
+            //该视图是否是图片分享/共享屏幕视屏流
+            if (!view.isPresentation) {
+                [self.farEndViewsArray addObject:[[VideoViewModel alloc] initWithuuid:uuid videoView:view participant:self.vcrtc.rosterList[uuid]]];
+            } else {
+                //远端图片分享/共享屏幕流时添加该视屏流视图
+                [self.farEndViewsArray addObject:[[VideoViewModel alloc] initWithuuid:[uuid stringByAppendingString:@"-presentation"] videoView:view participant:self.vcrtc.rosterList[uuid]]];
             }
-        }
-        if (!isContain) {
+        } else {
+            
             [self.farEndViewsArray addObject:[[VideoViewModel alloc] initWithuuid:uuid videoView:view participant:self.vcrtc.rosterList[uuid]]];
-            [self layoutFarEndView:self.vcrtc.layoutParticipants];
-        }
+            }
         
     } else {
         //单流流处理方式
         NSMutableArray *tempArray = [NSMutableArray array];
-            [tempArray addObject:[[VideoViewModel alloc] initWithuuid:uuid videoView:view participant:self.vcrtc.rosterList[uuid]]];
+        [tempArray addObject:[[VideoViewModel alloc] initWithuuid:uuid videoView:view participant:self.vcrtc.rosterList[uuid]]];
         for (VideoViewModel *sub in self.farEndViewsArray) {
             if ([self.vcrtc.uuid isEqualToString:sub.uuid]) {
                 [tempArray addObject:sub] ;
             }
         }
         self.farEndViewsArray = tempArray;
-        [self layoutFarEndView:self.vcrtc.layoutParticipants];
     }
+    [self layoutFarEndView:self.vcrtc.layoutParticipants];
 }
 
 //有参会者离开会议
 - (void)VCRtc:(VCRtcModule *)module didRemoveView:(VCVideoView *)view uuid:(NSString *)uuid {
-    //从视图上移除
+    NSString * removeUUID =  uuid;
+    if (view.isPresentation) {
+        removeUUID = [uuid stringByAppendingString:@"-presentation"];
+    }
+    
     for (UIView *view in self.othersView.subviews) {
         if ([view isKindOfClass:[SmallView class]]) {
             SmallView *smallView = (SmallView *)view;
-            if ([smallView.uuid isEqualToString:uuid]) {
+            if ([smallView.uuid isEqualToString:removeUUID]) {
                 [smallView removeFromSuperview];
             }
         }
     }
+    
     //从数组上移除
     [self.farEndViewsArray enumerateObjectsUsingBlock:^(VideoViewModel * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
         
-        if ([obj.uuid isEqualToString:uuid]) {
+        if ([obj.uuid isEqualToString:removeUUID]) {
             [self.farEndViewsArray removeObject:obj];
         }
     }];
+    //更新布局
     [self layoutFarEndView:self.vcrtc.layoutParticipants];
 }
 
 - (void)VCRtc:(VCRtcModule *)module didLayoutParticipants:(NSArray *)participants {
-    
     [self layoutFarEndView:participants];
 }
 
@@ -238,59 +247,95 @@
 }
 
 //MARK: - 分享 - 远端 本端发送图片 、 本端录制屏幕
-
 /**
  公有云下:
  自己本端分享图片和屏幕共享的时候didStartImage方法不会调用 只有远端共享图片和屏幕共享的时候才会调用
+ 专属云 本端分享图片屏幕共享会调用该方法didStartImage
  */
 - (void)VCRtc:(VCRtcModule *)module didStartImage:(NSString *)shareUuid {
-        NSUserDefaults *userDefaults = [[NSUserDefaults alloc]initWithSuiteName:self.vcrtc.groupId ];
-    //本地屏幕共享 被远端抢流(远端屏幕共享,分享图片)
-    //ongoing 本端屏幕录制进行中
-    //start 本端屏幕录制开始中
-    if (([[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"ongoing"] || [[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"start"]) && self.shareModel.isSharing && [self.shareModel.shareType isEqualToString:@"localScreenShare"] ) {
-        //被抢流本端屏幕共享停止
-        [userDefaults setObject:@"stop" forKey:kScreenRecordState];
-        //分享类型是远端分享
-        self.shareModel.shareType = @"remote";
-        //远端正在开始准备分享
-        self.shareModel.isSharing = YES;
-        //远端分享者的唯一标识
-        self.shareModel.uuid = shareUuid;
-        //本端屏幕录制状态图隐藏
-        self.screenRecordStateImg.hidden = YES;
-        //本端分享按钮非选中状态
-        self.shareBtn.selected = NO;
-     
-    }
-//        else if ([[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"start"] ) {
-//        if ([shareUuid isEqualToString:self.vcrtc.uuid]) {
-//            self.shareModel.shareType = @"localScreenShare";
-//            self.shareModel.isSharing = YES;
-//            self.shareModel.uuid = shareUuid;
-//            self.screenRecordStateImg.hidden = NO;
-//            self.shareBtn.selected = YES;
-//        }
-//
-//    }
-    else {
-        //远端图片分享或屏幕共享
-        if (![shareUuid isEqualToString:self.vcrtc.uuid]) {
+    NSUserDefaults *userDefaults = [[NSUserDefaults alloc]initWithSuiteName:self.vcrtc.groupId ];
+    if (self.isPrivateCloud) {
+        //本端分享/或共享屏幕
+        if ([self.vcrtc.uuid isEqualToString:shareUuid]) {
+            //本端开始共享屏幕
+            if (([[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"ongoing"] || [[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"start"])) {
+                //被抢流本端屏幕共享停止
+                [userDefaults setObject:@"ongoing" forKey:kScreenRecordState];
+                //分享类型是远端分享
+                self.shareModel.shareType = @"localScreenShare";
+                //远端正在开始准备分享
+                self.shareModel.isSharing = YES;
+                //远端分享者的唯一标识
+                self.shareModel.uuid = shareUuid;
+                //本端屏幕录制状态图隐藏
+                self.screenRecordStateImg.hidden = NO;
+                //本端分享按钮非选中状态
+                self.shareBtn.selected = YES;
+                
+            } else {
+                //本端分享图片
+                //分享按钮选中状态
+                self.shareBtn.selected = YES;
+                //分享类型 本端图片分享
+                self.shareModel.shareType = @"local";
+                //分享人的唯一标识
+                self.shareModel.uuid = shareUuid;
+                //正在分享
+                self.shareModel.isSharing = YES;
+                
+            }
+        } else {
+            //远端分享图片或者屏幕共享(接收分享的图片是流的形式所以不需要shareView来显示)
+            [self.shareView removeFromSuperview];
             //分享按钮非选中状态
             self.shareBtn.selected = NO;
+            //分享类型 远端图片分享或屏幕共享
+            self.shareModel.shareType = @"remote";
+            //分享人的唯一标识
+            self.shareModel.uuid = shareUuid;
+            //正在分享
+            self.shareModel.isSharing = YES;
         }
-        //分享类型 远端图片分享或屏幕共享
-        self.shareModel.shareType = @"remote";
-        //分享人的唯一标识
-        self.shareModel.uuid = shareUuid;
-        //正在分享
-        self.shareModel.isSharing = YES;
+        [self layoutFarEndView:self.vcrtc.layoutParticipants];
+    } else {
+        //本地屏幕共享 被远端抢流(远端屏幕共享,分享图片)
+        //ongoing 本端屏幕录制进行中
+        //start 本端屏幕录制开始中
+        if (([[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"ongoing"] || [[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"start"]) && self.shareModel.isSharing && [self.shareModel.shareType isEqualToString:@"localScreenShare"] ) {
+            //被抢流本端屏幕共享停止
+            [userDefaults setObject:@"stop" forKey:kScreenRecordState];
+            //分享类型是远端分享
+            self.shareModel.shareType = @"remote";
+            //远端正在开始准备分享
+            self.shareModel.isSharing = YES;
+            //远端分享者的唯一标识
+            self.shareModel.uuid = shareUuid;
+            //本端屏幕录制状态图隐藏
+            self.screenRecordStateImg.hidden = YES;
+            //本端分享按钮非选中状态
+            self.shareBtn.selected = NO;
+            
+        } else {
+            //远端图片分享或屏幕共享
+            if (![shareUuid isEqualToString:self.vcrtc.uuid]) {
+                //分享按钮非选中状态
+                self.shareBtn.selected = NO;
+                //分享类型 远端图片分享或屏幕共享
+                self.shareModel.shareType = @"remote";
+                //分享人的唯一标识
+                self.shareModel.uuid = shareUuid;
+                //正在分享
+                self.shareModel.isSharing = YES;
+            }
+        }
     }
+    
 }
 
 
 /**
- 这个方法无论是本端或远端图片分享或屏幕共享都会调用
+ isPrivateCloud 为NO 这个方法无论是本端或远端图片分享或屏幕共享都会调用
+ isPrivateCloud 为 YES 该方法不调用 因为分享和屏幕共享都是流的形式
  */
 - (void)VCRtc:(VCRtcModule *)module didUpdateImage:(NSString *)imageStr uuid:(NSString *)uuid {
     NSUserDefaults *userDefaults = [[NSUserDefaults alloc]initWithSuiteName:self.vcrtc.groupId ];
@@ -298,6 +343,10 @@
     if ([[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"start"] || [[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"ongoing"]) {
         //状态更改为正在屏幕共享进行中
         [userDefaults setObject:@"ongoing" forKey:kScreenRecordState];
+        //远端在屏幕共享本端抢流
+        if ([self.shareModel.shareType isEqualToString:@"remote"] && self.shareModel.isSharing) {
+            [self.shareView removeFromSuperview];
+        }
         //本端屏幕共享
         self.shareModel.shareType = @"localScreenShare";
         //正在屏幕共享
@@ -306,8 +355,9 @@
         self.screenRecordStateImg.hidden = NO;
         //分享按钮选中状态
         self.shareBtn.selected = YES;
+    
     } else {
-        //分享图片自己本端分享的时候不做处理 或者是屏幕录制也不做处理
+        //分享图自己本端分享的时候不做处理 或者是屏幕录制也不做处理
         if (([self.shareModel.shareType isEqualToString:@"local"] || [self.shareModel.shareType isEqualToString:@"localScreenShare"]) && self.shareModel.isSharing ) {
             return;
         }
@@ -318,94 +368,195 @@
         self.shareImages = @[url];
         [self loadPresentationView];
     }
-
+    
 }
 
 
 /**
- 远端屏幕共享或图片分享结束才调用 本端不调用
+ isPrivateCloud 为NO 远端屏幕共享或图片分享结束才调用 本端不调用
+ isPrivateCloud 为YES 本端和远端分享或屏幕共享结束都会调用
  */
 - (void)VCRtc:(VCRtcModule *)module didStopImage:(NSString *)imageStr {
     NSUserDefaults *userDefaults = [[NSUserDefaults alloc]initWithSuiteName:self.vcrtc.groupId ];
-    //本端屏幕共享结束
-    if ([self.shareModel.shareType isEqualToString:@"localScreenShare"] && self.shareModel.isSharing && self.shareBtn.selected) {
-        if ([[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"stop"] || [[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"applaunch"]) {
+    if (self.isPrivateCloud) {
+        //本端在分享图片的时候没结束不能屏幕共享
+        if (self.shareModel.isSharing && [self.shareModel.shareType isEqualToString:@"local"] && [[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"start"]) {
+                //更新状态 屏幕共享结束
+                [userDefaults setObject:@"stop" forKey:kScreenRecordState];
+                //分享按钮非选中状态
+                self.shareBtn.selected = NO;
+                //屏幕共享状态视图隐藏
+                self.screenRecordStateImg.hidden = YES;
+                //分享model数据为空
+                self.shareModel = nil;
+                [self.shareView removeFromSuperview];
+            //分享断开
+                [self.vcrtc shareToRemoteDisconnect];
+            //更新屏幕显示的视频
+            [self layoutFarEndView:self.vcrtc.layoutParticipants];
+        } else if  (self.shareModel.isSharing && [self.shareModel.shareType isEqualToString:@"localScreenShare"] && ([[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"start"] || [[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"ongoing"])) {
+            //屏幕共享被远端抢流
             //更新状态 屏幕共享结束
-            [userDefaults setObject:kScreenRecordState forKey:@"stop"];
-            //分享按钮非选中状态
-            self.shareBtn.selected = NO;
-            //屏幕共享状态视图隐藏
+            [userDefaults setObject:@"stop" forKey:kScreenRecordState];
+            self.shareModel = nil;
             self.screenRecordStateImg.hidden = YES;
-            //分享model数据为空
-            self.shareModel = nil;
+             self.shareBtn.selected = NO;
+            [self layoutFarEndView:self.vcrtc.layoutParticipants];
+        } else {
+            //远端图片分享结束
+            if ([self.shareModel.shareType isEqualToString:@"local"]) {
+                self.shareBtn.selected = NO;
+                //移除屏幕显示的分享的内容视图
+                [self.shareView removeFromSuperview];
+                [self.vcrtc shareToRemoteDisconnect];
+                self.shareView = nil;
+                self.shareImages = nil;
+                self.shareModel = nil;
+            } else if ([self.shareModel.shareType isEqualToString:@"remote"]) {
+                self.shareView = nil;
+                self.shareModel = nil;
+            } else if ([self.shareModel.shareType isEqualToString:@"local_remote"]) {
+//                self.shareView = nil;
+//                self.shareModel = nil;
+            }
             //更新屏幕显示的视频
-            [self layoutFarEndView:self.vcrtc.layoutParticipants] ;
+            [self layoutFarEndView:self.vcrtc.layoutParticipants];
         }
-    } else {
-        //远端图片分享结束
-        if (![self.shareModel.shareType isEqualToString:@"local"]) {
-            //移除屏幕显示的分享的内容视图
-            [self.shareView removeFromSuperview];
-            self.shareView = nil;
-            self.shareImages = nil;
-            self.shareModel = nil;
-            //更新屏幕显示的视频
-            [self layoutFarEndView:self.vcrtc.layoutParticipants] ;
-        }
-    }
 
+    } else {
+        //本端屏幕共享结束
+        if ([self.shareModel.shareType isEqualToString:@"localScreenShare"] && self.shareModel.isSharing && self.shareBtn.selected) {
+            if ([[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"stop"] || [[userDefaults objectForKey:kScreenRecordState] isEqualToString:@"applaunch"]) {
+                //更新状态 屏幕共享结束
+                [userDefaults setObject:@"stop" forKey:kScreenRecordState];
+                //分享按钮非选中状态
+                self.shareBtn.selected = NO;
+                //屏幕共享状态视图隐藏
+                self.screenRecordStateImg.hidden = YES;
+                //分享model数据为空
+                self.shareModel = nil;
+                //更新屏幕显示的视频
+                [self layoutFarEndView:self.vcrtc.layoutParticipants] ;
+            }
+        } else {
+            //远端图片分享结束
+            if (![self.shareModel.shareType isEqualToString:@"local"]) {
+                //移除屏幕显示的分享的内容视图
+                [self.shareView removeFromSuperview];
+                self.shareView = nil;
+                self.shareImages = nil;
+                self.shareModel = nil;
+                //更新屏幕显示的视频
+                [self layoutFarEndView:self.vcrtc.layoutParticipants] ;
+            }
+        }
+
+    }
     
 }
 
 /** 远端视频布局 */
+//isPrivateCloud 为YES是以流的形式共享屏幕或图片 isPrivateCloud 为NO是以图片的形式共享屏幕或图片
 - (void)layoutFarEndView: (NSArray <NSString *>*)participants  {
-   
+    
     if (participants == nil || participants.count == 0) {
-         [self clearAllView];
+        [self clearAllView];
         //只有本地视图
         [self createBigView];
         [self createSmallView];
         
     } else {
-        //排序规则 根据是否有人发言 有发言放在大视频上面 根据participants返回的数据排序 我自己本地始终放在小视频第一个
-        NSMutableArray *tempArray = [NSMutableArray array];
-        //participants
-        for (NSString *uuid in participants) {
-            for (VideoViewModel *videoViewModel in self.farEndViewsArray) {
-                if ([uuid isEqualToString:videoViewModel.uuid] && ![uuid isEqualToString:self.vcrtc.uuid]) {
-                    if (![tempArray containsObject:videoViewModel]) {
-                        //不包含自己
-                        [tempArray addObject:videoViewModel];
-                    }
+        if (self.isPrivateCloud) {
+            //是否人的共享图片或屏幕
+            BOOL isPresentation = NO;
+            for (NSString *uuid in participants) {
+                if ([uuid rangeOfString:@"-presentation"].length) {
+                    isPresentation = YES ;
                 }
             }
-        }
-        
-        for (VideoViewModel *model in self.farEndViewsArray) {
-            if ( [model.uuid isEqualToString:self.vcrtc.uuid]) {
-                //添加自己,并且把位置放在小视频的第一位
-                if (![tempArray containsObject:model]) {
-                    if (tempArray.count >= 2) {
-                        [tempArray insertObject:model atIndex:1];
+            
+            NSMutableArray *participantsArray = [participants mutableCopy];
+            if (!isPresentation) {
+                if (![participantsArray containsObject:self.vcrtc.uuid]) {
+                    if (participantsArray.count <= 1) {
+                        [participantsArray addObject:self.vcrtc.uuid];
                     } else {
-                        [tempArray addObject:model];
+                        [participantsArray insertObject:self.vcrtc.uuid atIndex:1];
                     }
                 }
             }
+            NSMutableArray *tempArray = [NSMutableArray array];
+            for (NSString *uuid in participantsArray) {
+                for (VideoViewModel *viewModel in self.farEndViewsArray) {
+                    if ([uuid isEqualToString:self.vcrtc.uuid]) {
+                        if (![tempArray containsObject:self.localViewModel]) {
+                          [tempArray addObject:self.localViewModel];
+                        }
+                    } else {
+                        if ([uuid isEqualToString:viewModel.uuid]) {
+                            //判断数组是否已经添加过该条数据
+                            if (![tempArray containsObject:viewModel]) {
+                                [tempArray addObject:viewModel];
+                                
+                            }
+                        }
+                    }
+
+                }
+            }
+            self.farEndViewsArray = tempArray;
+            [self clearAllView];
+            //本端分享图片
+            if ([self.shareModel.shareType isEqualToString:@"local"] && self.shareModel.isSharing && isPresentation == NO) {
+                [self updatePresentSmallView];
+            } else {
+                [self createBigView];
+                [self createSmallView];
+            }
+
+            
+        } else {
+            //排序规则 根据是否有人发言 有发言放在大视频上面 根据participants返回的数据排序 我自己本地始终放在小视频第一个
+            NSMutableArray *tempArray = [NSMutableArray array];
+            //participants
+            for (NSString *uuid in participants) {
+                for (VideoViewModel *videoViewModel in self.farEndViewsArray) {
+                    if ([uuid isEqualToString:videoViewModel.uuid] && ![uuid isEqualToString:self.vcrtc.uuid]) {
+                        if (![tempArray containsObject:videoViewModel]) {
+                            //不包含自己
+                            [tempArray addObject:videoViewModel];
+                        }
+                    }
+                }
+            }
+            
+            for (VideoViewModel *model in self.farEndViewsArray) {
+                if ( [model.uuid isEqualToString:self.vcrtc.uuid]) {
+                    //添加自己,并且把位置放在小视频的第一位
+                    if (![tempArray containsObject:model]) {
+                        if (tempArray.count >= 2) {
+                            [tempArray insertObject:model atIndex:1];
+                        } else {
+                            [tempArray addObject:model];
+                        }
+                    }
+                }
+            }
+            
+            self.farEndViewsArray = tempArray;
+            [self clearAllView];
+            if (self.shareModel.isSharing) {
+                [self updatePresentSmallView];
+            } else {
+                [self createBigView];
+                [self createSmallView];
+            }
         }
         
-        self.farEndViewsArray = tempArray;
-        [self clearAllView];
-        if (self.shareModel.isSharing) {
-            [self updatePresentSmallView];
-        } else {
-            [self createBigView];
-            [self createSmallView];
-        }
         
         
     }
-
+    
 }
 
 - (void)clearAllView {
@@ -420,7 +571,7 @@
     if (self.farEndViewsArray.count < 1) {
         return;
     }
-     VideoViewModel *videoViewModel = [self.farEndViewsArray firstObject];
+    VideoViewModel *videoViewModel = [self.farEndViewsArray firstObject];
     SmallView *bigView = [SmallView loadSmallViewWithVideoView:videoViewModel.videoView isTurnOffTheCamera:NO withParticipant:videoViewModel.participant isBig:YES uuid:videoViewModel.uuid];
     bigView.frame = self.othersView.bounds;
     [self.othersView addSubview:bigView];
@@ -475,7 +626,7 @@
     if (self.shareBtn.selected) {
         //如果本端是图片分享
         if ([self.shareModel.shareType isEqualToString:@"local"]) {
-            if (self.isShiTong) {
+            if (self.isPrivateCloud) {
                 //终止图片流分享
                 [self.vcrtc shareToStreamImageData:[NSData data]
                                               open:NO
@@ -497,7 +648,7 @@
             self.shareModel = nil;
             self.shareBtn.selected = NO;
         } else if ([self.shareModel.shareType isEqualToString:@"localScreenShare"]) {
-                NSUserDefaults *userDefaults = [[NSUserDefaults alloc]initWithSuiteName:self.vcrtc.groupId ];
+            NSUserDefaults *userDefaults = [[NSUserDefaults alloc]initWithSuiteName:self.vcrtc.groupId ];
             [self.vcrtc stopRecordScreen];
             //更新状态 屏幕共享结束
             [userDefaults setObject:@"stop" forKey:kScreenRecordState];
@@ -510,7 +661,7 @@
             //更新屏幕显示的视频
             [self layoutFarEndView:self.vcrtc.layoutParticipants] ;
         }
-       
+        
     } else {
         UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil message:nil preferredStyle:UIAlertControllerStyleActionSheet];
         UIAlertAction *photoAction = [UIAlertAction actionWithTitle:@"照片" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
@@ -539,7 +690,7 @@
 
 //屏幕共享指引
 - (void)screenRecordInfo {
-    ZJNotRecordedController *notRecordC = [[ZJNotRecordedController alloc]init];
+    NotRecordedController *notRecordC = [[NotRecordedController alloc]init];
     notRecordC.videoUri = @[@"01FirstSet",@"02StartRecord"];
     [self presentViewController:notRecordC animated:NO completion:nil];
 }
@@ -554,14 +705,14 @@
 
 //分享图片
 - (void)photoShareAction {
-
-        TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:9 columnNumber:6 delegate:self pushPhotoPickerVc:YES];
-        imagePickerVc.allowPickingOriginalPhoto = NO;
-        [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
-            [self shareData:photos];
-        }];
-        [self presentViewController:imagePickerVc animated:true completion:nil];
-
+    
+    TZImagePickerController *imagePickerVc = [[TZImagePickerController alloc] initWithMaxImagesCount:9 columnNumber:6 delegate:self pushPhotoPickerVc:YES];
+    imagePickerVc.allowPickingOriginalPhoto = NO;
+    [imagePickerVc setDidFinishPickingPhotosHandle:^(NSArray<UIImage *> *photos, NSArray *assets, BOOL isSelectOriginalPhoto) {
+        [self shareData:photos];
+    }];
+    [self presentViewController:imagePickerVc animated:true completion:nil];
+    
 }
 
 - (void) shareData:(NSArray *)photos {
@@ -573,33 +724,26 @@
 
 - (void)submitSharingImage:(UIImage *)image change:(BOOL )myChange{
     NSData* data = UIImageJPEGRepresentation(image, 1);
-    BOOL isShiTong = NO;
-    if (isShiTong) {
-        [self.vcrtc shareToStreamImageData:data open:YES change:self.shareModel.uuid.length ? YES : NO success:^(id  _Nonnull response) {
-//            NSLog(@"分享成功：%@ -- ",response);
-//            self.shareUuid = @"new";
-//            self.shareBbtn.selected = YES ;
-//            self.localSharing = YES ;
-//            self.sharing = YES ;
-//            self.sharingStuts = [self.sharingStuts isEqualToString:@"video"] ? @"local_remote" : @"local" ;
+    if (self.isPrivateCloud) {
+        // self.isPrivateCloud 为YES时,回调方法不会调用
+        [self.vcrtc shareToStreamImageData:data open:YES change:myChange success:^(id  _Nonnull response) {
+            
         } failure:^(NSError * _Nonnull error) {
-            NSLog(@"分享失败：%@ -- ",error);
-//            if(self.shareBbtn.selected == NO) return ;
-//            self.shareBbtn.selected = NO ;
-//            self.sharing = NO ;
-//            self.localSharing = NO ;
+                        NSLog(@"分享失败：%@ -- ",error);
+                        if(self.shareBtn.selected == NO) return ;
+                        self.shareBtn.selected = NO ;
+                        self.shareModel.isSharing = NO ;
         }];
-
-//        if (myChange != YES) {
-//            self.shareUuid = @"new";
-//            self.shareBbtn.selected = YES ;
-//            self.localSharing = YES ;
-//            self.sharing = YES ;
-//            self.sharingStuts = [self.sharingStuts isEqualToString:@"none"] ? @"local" : @"local_remote" ;
-//        }
-
-
-    } else {//self.shareUuid.length ? YES :
+        if (!myChange) {
+            //更新shareModel的相关状态
+            //local_remote 抢远端的流 如果远端在分享 从远端抢流
+            self.shareModel.shareType = [ self.shareModel.shareType isEqualToString:@"none"] ? @"local" : @"local_remote";
+            self.shareModel.isSharing = YES;
+            self.shareModel.uuid = self.vcrtc.uuid;
+            self.shareBtn.selected = YES ;
+        }
+        
+    } else {
         [self.vcrtc shareImageData:data open:YES change: myChange success:^(id  _Nonnull response) {
             NSLog(@"分享成功：%@ -- ",response);
             //更新shareModel的相关状态
@@ -614,7 +758,7 @@
             self.shareModel.isSharing = NO ;
         }];
     }
-
+    
 }
 
 
@@ -646,12 +790,7 @@
         } else if (self.farEndViewsArray.count == 1) {
             model = [self.farEndViewsArray firstObject] ;
         } else if (self.farEndViewsArray.count > 1) {
-            //显示自己的小视频
-            for (VideoViewModel *tempModel in self.farEndViewsArray) {
-                if ([tempModel.uuid isEqualToString:self.vcrtc.uuid]) {
-                    model = tempModel;
-                }
-            }
+             model = self.farEndViewsArray[1];
         }
         //查看当前这个视图上是否有小视频 如果有只是更改小视频的VCVideoView 如果没有再新建 (防止重复创建改视图)
         BOOL isContainSmallView = NO;
@@ -737,9 +876,9 @@
     [self.statisticsArray addObject:@[@"",@"通道名称",@"编码格式",@"分辨率",@"帧率",@"码率",@"抖动",@"丢包率"]];
     
     for (VCMediaStat *stat in mediaStats) {
-//        if ([stat.direction isEqualToString:@"recv"] && [stat.mediaType isEqualToString:@"video"]&& [stat.uuid isEqualToString:self.vcrtc.uuid]) {
-//            continue;
-//        }
+        //        if ([stat.direction isEqualToString:@"recv"] && [stat.mediaType isEqualToString:@"video"]&& [stat.uuid isEqualToString:self.vcrtc.uuid]) {
+        //            continue;
+        //        }
         NSMutableArray *tempArray = [NSMutableArray array];
         NSString *display = @"";
         if ([self.vcrtc.rosterList.allKeys containsObject:stat.uuid]) {
@@ -768,7 +907,7 @@
 
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
-    ZJConferenceHeaderView *headerView = [[ZJConferenceHeaderView alloc]init];
+    ConferenceHeaderView *headerView = [[ConferenceHeaderView alloc]init];
     headerView.frame = CGRectMake(0, 0, self.table.frame.size.width, 95);
     headerView.titleArray = [self.statisticsArray firstObject];
     __weak typeof (self) weakSelf = self;
@@ -789,7 +928,7 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    ZJConferenceVCCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ZJConferenceVCCell"];
+    ConferenceVCCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ConferenceVCCell"];
     cell.tableViewWidth = self.table.frame.size.width;
     cell.titleArray = self.statisticsArray[indexPath.row + 1];
     return cell;

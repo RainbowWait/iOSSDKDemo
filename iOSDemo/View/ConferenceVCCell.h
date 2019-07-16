@@ -1,5 +1,5 @@
 //
-//  ZJConferenceVCCell.h
+//  ConferenceVCCell.h
 //  linphone
 //
 //  Created by mac on 2019/6/6.
@@ -9,7 +9,7 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface ZJConferenceVCCell : UITableViewCell
+@interface ConferenceVCCell : UITableViewCell
 @property(nonatomic, strong) NSArray<NSString *> *titleArray;
 @property (nonatomic, assign) CGFloat tableViewWidth;//table宽度
 @end

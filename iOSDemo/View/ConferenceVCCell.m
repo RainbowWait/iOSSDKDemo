@@ -1,13 +1,13 @@
 //
-//  ZJConferenceVCCell.m
+//  ConferenceVCCell.m
 //  linphone
 //
 //  Created by mac on 2019/6/6.
 //
 
-#import "ZJConferenceVCCell.h"
+#import "ConferenceVCCell.h"
 
-@interface ZJConferenceVCCell ()
+@interface ConferenceVCCell ()
 @property (nonatomic, strong) NSMutableArray *labelArray;
 /**标题*/
 @property (nonatomic, strong) UIView *titlesView;
@@ -15,7 +15,7 @@
 @property (nonatomic, strong) UIView *bottomSeperateView;
 @end
 
-@implementation ZJConferenceVCCell
+@implementation ConferenceVCCell
 
 - (instancetype)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];

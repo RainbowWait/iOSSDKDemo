@@ -8,7 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ZJNotRecordedController : UIViewController
+@interface NotRecordedController : UIViewController
 
 @property(nonatomic, strong)NSArray *videoUri;
 

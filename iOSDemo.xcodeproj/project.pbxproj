@@ -79,7 +79,7 @@
 		0455AB5422C5F72900EFF39D /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0455AB1A22C5C83800EFF39D /* ReplayKit.framework */; };
 		0455AB5922C6047C00EFF39D /* ReplayKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0455AB1A22C5C83800EFF39D /* ReplayKit.framework */; };
 		0495179922D70AC40047FF05 /* VCRTC.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0406C06622D6DB9B002E0278 /* VCRTC.framework */; };
-		04C908C022D8308C00B4BEEC /* ZJNotRecordedController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908BE22D8308C00B4BEEC /* ZJNotRecordedController.m */; };
+		04C908C022D8308C00B4BEEC /* NotRecordedController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908BE22D8308C00B4BEEC /* NotRecordedController.m */; };
 		04C908C222D83CF200B4BEEC /* 01FirstSet.mov in Resources */ = {isa = PBXBuildFile; fileRef = 04C908C122D83CF200B4BEEC /* 01FirstSet.mov */; };
 		04C908C422D83D1700B4BEEC /* 02StartRecord.mov in Resources */ = {isa = PBXBuildFile; fileRef = 04C908C322D83D1600B4BEEC /* 02StartRecord.mov */; };
 		04C908C722D85DD900B4BEEC /* DocumentPickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04C908C622D85DD900B4BEEC /* DocumentPickerViewController.m */; };
@@ -94,6 +94,7 @@
 		04C9092022D894BA00B4BEEC /* ZJRTCScreenShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C9091F22D894BA00B4BEEC /* ZJRTCScreenShare.framework */; };
 		04C9092122D8950500B4BEEC /* ZJRTCScreenShare.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04C9091F22D894BA00B4BEEC /* ZJRTCScreenShare.framework */; };
 		04C9092222D8950500B4BEEC /* ZJRTCScreenShare.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 04C9091F22D894BA00B4BEEC /* ZJRTCScreenShare.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		04C9092522DC863000B4BEEC /* ExampleVC.m in Sources */ = {isa = PBXBuildFile; fileRef = 0455AACF22C35CE800EFF39D /* ExampleVC.m */; };
 		04E8CAC622D324BE00D84E26 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E8CAC522D324BE00D84E26 /* ViewController.m */; };
 		04E8CAC822D324F200D84E26 /* ViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E8CAC722D324F200D84E26 /* ViewController.xib */; };
 		04E8CACB22D327C800D84E26 /* BaseNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E8CACA22D327C800D84E26 /* BaseNavigationController.m */; };
@@ -103,8 +104,8 @@
 		04E8CAD422D343E600D84E26 /* SmallView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E8CAD222D343E600D84E26 /* SmallView.xib */; };
 		04E8CADA22D42DF900D84E26 /* NSMutableAttributedString+ZJAttributedString.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E8CAD822D42DF800D84E26 /* NSMutableAttributedString+ZJAttributedString.m */; };
 		04E8CAE122D4363900D84E26 /* VideoViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E8CAE022D4363900D84E26 /* VideoViewModel.m */; };
-		04E8CAEF22D46D6D00D84E26 /* ZJConferenceVCCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E8CAED22D46D6C00D84E26 /* ZJConferenceVCCell.m */; };
-		04E8CAF022D46D6D00D84E26 /* ZJConferenceHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E8CAEE22D46D6D00D84E26 /* ZJConferenceHeaderView.m */; };
+		04E8CAEF22D46D6D00D84E26 /* ConferenceVCCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E8CAED22D46D6C00D84E26 /* ConferenceVCCell.m */; };
+		04E8CAF022D46D6D00D84E26 /* ConferenceHeaderView.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E8CAEE22D46D6D00D84E26 /* ConferenceHeaderView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -290,8 +291,8 @@
 		0455AB3322C5E93600EFF39D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0455AB3A22C5E93600EFF39D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		0455AB5A22C6118700EFF39D /* iOSDemo.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = iOSDemo.entitlements; sourceTree = "<group>"; };
-		04C908BE22D8308C00B4BEEC /* ZJNotRecordedController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZJNotRecordedController.m; sourceTree = "<group>"; };
-		04C908BF22D8308C00B4BEEC /* ZJNotRecordedController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZJNotRecordedController.h; sourceTree = "<group>"; };
+		04C908BE22D8308C00B4BEEC /* NotRecordedController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NotRecordedController.m; sourceTree = "<group>"; };
+		04C908BF22D8308C00B4BEEC /* NotRecordedController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NotRecordedController.h; sourceTree = "<group>"; };
 		04C908C122D83CF200B4BEEC /* 01FirstSet.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 01FirstSet.mov; sourceTree = "<group>"; };
 		04C908C322D83D1600B4BEEC /* 02StartRecord.mov */ = {isa = PBXFileReference; lastKnownFileType = video.quicktime; path = 02StartRecord.mov; sourceTree = "<group>"; };
 		04C908C522D85DD900B4BEEC /* DocumentPickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DocumentPickerViewController.h; sourceTree = "<group>"; };
@@ -327,10 +328,10 @@
 		04E8CAD922D42DF900D84E26 /* NSMutableAttributedString+ZJAttributedString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableAttributedString+ZJAttributedString.h"; sourceTree = "<group>"; };
 		04E8CADF22D4363900D84E26 /* VideoViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VideoViewModel.h; sourceTree = "<group>"; };
 		04E8CAE022D4363900D84E26 /* VideoViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VideoViewModel.m; sourceTree = "<group>"; };
-		04E8CAEB22D46D6C00D84E26 /* ZJConferenceHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZJConferenceHeaderView.h; sourceTree = "<group>"; };
-		04E8CAEC22D46D6C00D84E26 /* ZJConferenceVCCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ZJConferenceVCCell.h; sourceTree = "<group>"; };
-		04E8CAED22D46D6C00D84E26 /* ZJConferenceVCCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZJConferenceVCCell.m; sourceTree = "<group>"; };
-		04E8CAEE22D46D6D00D84E26 /* ZJConferenceHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ZJConferenceHeaderView.m; sourceTree = "<group>"; };
+		04E8CAEB22D46D6C00D84E26 /* ConferenceHeaderView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConferenceHeaderView.h; sourceTree = "<group>"; };
+		04E8CAEC22D46D6C00D84E26 /* ConferenceVCCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConferenceVCCell.h; sourceTree = "<group>"; };
+		04E8CAED22D46D6C00D84E26 /* ConferenceVCCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConferenceVCCell.m; sourceTree = "<group>"; };
+		04E8CAEE22D46D6D00D84E26 /* ConferenceHeaderView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ConferenceHeaderView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -626,8 +627,8 @@
 			children = (
 				04C908C522D85DD900B4BEEC /* DocumentPickerViewController.h */,
 				04C908C622D85DD900B4BEEC /* DocumentPickerViewController.m */,
-				04C908BF22D8308C00B4BEEC /* ZJNotRecordedController.h */,
-				04C908BE22D8308C00B4BEEC /* ZJNotRecordedController.m */,
+				04C908BF22D8308C00B4BEEC /* NotRecordedController.h */,
+				04C908BE22D8308C00B4BEEC /* NotRecordedController.m */,
 				0455AACE22C35CE800EFF39D /* ExampleVC.h */,
 				0455AACF22C35CE800EFF39D /* ExampleVC.m */,
 				0455AB1322C4530100EFF39D /* ExampleVC.xib */,
@@ -646,10 +647,10 @@
 			children = (
 				0406BFDA22D5998E002E0278 /* VCPresentionView.h */,
 				0406BFDB22D5998E002E0278 /* VCPresentionView.m */,
-				04E8CAEB22D46D6C00D84E26 /* ZJConferenceHeaderView.h */,
-				04E8CAEE22D46D6D00D84E26 /* ZJConferenceHeaderView.m */,
-				04E8CAEC22D46D6C00D84E26 /* ZJConferenceVCCell.h */,
-				04E8CAED22D46D6C00D84E26 /* ZJConferenceVCCell.m */,
+				04E8CAEB22D46D6C00D84E26 /* ConferenceHeaderView.h */,
+				04E8CAEE22D46D6D00D84E26 /* ConferenceHeaderView.m */,
+				04E8CAEC22D46D6C00D84E26 /* ConferenceVCCell.h */,
+				04E8CAED22D46D6C00D84E26 /* ConferenceVCCell.m */,
 				04E8CACE22D343D600D84E26 /* SmallView.h */,
 				04E8CACF22D343D600D84E26 /* SmallView.m */,
 				04E8CAD222D343E600D84E26 /* SmallView.xib */,
@@ -857,7 +858,7 @@
 				0406C04422D59AA3002E0278 /* UIView+WebCache.m in Sources */,
 				0406BFD322D58D45002E0278 /* TZPhotoPreviewCell.m in Sources */,
 				0455AAD022C35CE800EFF39D /* ExampleVC.m in Sources */,
-				04E8CAF022D46D6D00D84E26 /* ZJConferenceHeaderView.m in Sources */,
+				04E8CAF022D46D6D00D84E26 /* ConferenceHeaderView.m in Sources */,
 				0406C03522D59AA3002E0278 /* SDWebImageCoderHelper.m in Sources */,
 				0406BFC922D58D45002E0278 /* TZAssetCell.m in Sources */,
 				0406BFEB22D59A0E002E0278 /* UIView+YCExtension.m in Sources */,
@@ -905,9 +906,9 @@
 				0406C04922D5B4AF002E0278 /* UIImage+tag.m in Sources */,
 				0406BFEE22D59A0E002E0278 /* YCPhotoBrowserConst.m in Sources */,
 				0406BFED22D59A0E002E0278 /* YCPhotoBrowserCellHelper.m in Sources */,
-				04C908C022D8308C00B4BEEC /* ZJNotRecordedController.m in Sources */,
+				04C908C022D8308C00B4BEEC /* NotRecordedController.m in Sources */,
 				0406C03F22D59AA3002E0278 /* UIImageView+WebCache.m in Sources */,
-				04E8CAEF22D46D6D00D84E26 /* ZJConferenceVCCell.m in Sources */,
+				04E8CAEF22D46D6D00D84E26 /* ConferenceVCCell.m in Sources */,
 				0406C03722D59AA3002E0278 /* SDWebImagePrefetcher.m in Sources */,
 				0406BFD522D58D45002E0278 /* TZLocationManager.m in Sources */,
 				0406C03422D59AA3002E0278 /* UIImage+MultiFormat.m in Sources */,
@@ -939,6 +940,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0455AAF022C35CEC00EFF39D /* iOSDemoUITests.m in Sources */,
+				04C9092522DC863000B4BEEC /* ExampleVC.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

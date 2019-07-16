@@ -18,6 +18,8 @@
 @property (weak, nonatomic) IBOutlet UITextField *joinPwdField;
 //是否是多流
 @property (weak, nonatomic) IBOutlet UISwitch *multistreamSwitch;
+/** 是否是专属云 公有云才有多流和单流之分 专属云只有多流 */
+@property (weak, nonatomic) IBOutlet UISwitch *privateCloudSwitch;
 
 @end
 
@@ -30,6 +32,20 @@
         self.meetingNumField.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"meetingNumber"];
         self.joinPwdField.text = [[NSUserDefaults standardUserDefaults]objectForKey:@"joinPassword"];
 }
+
+- (IBAction)mutistreamAction:(UISwitch *)sender {
+    
+    
+}
+
+- (IBAction)privateCloudAction:(UISwitch *)sender {
+    if (sender.on) {
+        self.multistreamSwitch.on = sender.on;
+    }
+    
+}
+
+
 - (IBAction)jumpAction:(UIButton *)sender {
     if (self.severField.text.length < 1) {
         NSLog(@"请输入服务器地址");
@@ -47,6 +63,7 @@
     vc.meetingNumString = self.meetingNumField.text;
     vc.passwordString = self.joinPwdField.text;
     vc.isMultistream = self.multistreamSwitch.on;
+    vc.isPrivateCloud = self.privateCloudSwitch.on;
     [self.navigationController presentViewController:vc animated:YES completion:nil];
 }
 

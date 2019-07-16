@@ -14,7 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
 
 分享类型 local本端分享图片 remote 远端分享(图片或屏幕共享) none暂时没有分享
- localScreenShare 本端屏幕共享(即录制屏幕)
+ localScreenShare 本端屏幕共享(即录制屏幕) local_remote 抢其他人的分享
  本端: 代表自己
  远端: 其他参会者
  注意:公有云环境下 远端和本端屏幕共享生成的都是一帧一帧的图片

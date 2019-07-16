@@ -17,5 +17,7 @@
 @property (nonatomic, copy) NSString *passwordString;
 /** 是否为多流模式 多流模式清晰度较高 */
 @property (nonatomic, assign) BOOL isMultistream;
+/** 公有云还是专属云 */
+@property (nonatomic, assign) BOOL  isPrivateCloud;
 @end
 

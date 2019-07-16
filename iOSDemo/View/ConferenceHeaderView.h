@@ -1,5 +1,5 @@
 //
-//  ZJConferenceHeaderView.h
+//  ConferenceHeaderView.h
 //  linphone
 //
 //  Created by mac on 2019/6/6.
@@ -10,8 +10,8 @@
 NS_ASSUME_NONNULL_BEGIN
 
 
-typedef void(^CloseBlock)();
-@interface ZJConferenceHeaderView : UIView
+typedef void(^CloseBlock)(void);
+@interface ConferenceHeaderView : UIView
 @property (nonatomic, copy) CloseBlock block;
 @property(nonatomic, strong) NSArray<NSString *> *titleArray;
 @end

@@ -6,13 +6,13 @@
 //  Copyright © 2018年 Facebook. All rights reserved.
 //
 
-#import "ZJNotRecordedController.h"
+#import "NotRecordedController.h"
 #import <AVKit/AVKit.h>
 //#import "UIView+Frame.h"
 
 #define SafeTophieght (SCREEN_HEIGHT == 812.0 ? 24 : 0)
 
-@interface ZJNotRecordedController ()<UIScrollViewDelegate>
+@interface NotRecordedController ()<UIScrollViewDelegate>
 
 @property (strong, nonatomic)AVPlayer *alertPlayer;//播放器
 @property (strong, nonatomic)AVPlayerItem *alertitem;//播放单元
@@ -28,7 +28,7 @@
 @property(nonatomic,strong)NSTimer *timerShow;
 @end
 
-@implementation ZJNotRecordedController
+@implementation NotRecordedController
 
 - (UIScrollView *)myScrollView{
   if (!_myScrollView) {

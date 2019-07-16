@@ -1,13 +1,13 @@
 //
-//  ZJConferenceHeaderView.m
+//  ConferenceHeaderView.m
 //  linphone
 //
 //  Created by mac on 2019/6/6.
 //
 
-#import "ZJConferenceHeaderView.h"
+#import "ConferenceHeaderView.h"
 
-@interface ZJConferenceHeaderView ()
+@interface ConferenceHeaderView ()
 /**关闭按钮*/
 @property (nonatomic, strong) UIButton *closeBtn;
 /**标题*/
@@ -16,7 +16,7 @@
 @property (nonatomic, strong) UIView *bottomSeperateView;
 @end
 
-@implementation ZJConferenceHeaderView
+@implementation ConferenceHeaderView
 
 - (instancetype)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
